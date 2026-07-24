@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import PostCard from "@/component/PostCard";
 import RightSidebar from "@/component/RightSidebar";
 import CreatePost from "@/component/CreatePost";
+import StoryRail from "@/component/StoryRail";
 
 // Mock posts data
 const initialPosts = [
@@ -156,6 +157,7 @@ interface Post {
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [activeTab, setActiveTab] = useState<"For you" | "Following">("For you");
 
   const handlePostCreate = (newPost: {
     content: string;
@@ -183,48 +185,77 @@ export default function Home() {
     setPosts([post, ...posts]);
   };
 
-  return (
-    <div className="flex h-screen bg-gradient-to-b from-slate-50 via-purple-50/40 to-white">
-      {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto ml-72 pr-80">
-        <div className="max-w-2xl mx-auto px-4 py-6">
-          {/* Feed Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="mb-6"
-          >
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Home</h1>
-            <p className="text-sm text-gray-500">See what's happening in your feed</p>
-          </motion.div>
+  const tabs = ["For you", "Following"] as const;
 
-          {/* Create Post Component */}
+  return (
+    <div className="flex h-screen">
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
+        {/* Sticky glass header with segmented tabs */}
+        {/* top-0 is relative to the scrollport, whose pt-14 already clears the fixed mobile bar */}
+        <div className="sticky top-0 z-30 glass border-b border-[var(--line)]">
+          <div className="max-w-2xl mx-auto px-4 pt-4 pb-0">
+            <h1 className="text-[22px] font-bold tracking-tight text-[var(--ink-900)]">Home</h1>
+            <div className="flex gap-1 mt-2">
+              {tabs.map((tab) => {
+                const active = tab === activeTab;
+                return (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className="relative px-4 py-2.5 text-[13.5px] font-semibold transition-colors"
+                    style={{ color: active ? "var(--brand-600)" : "var(--ink-400)" }}
+                  >
+                    {tab}
+                    {active && (
+                      <motion.span
+                        layoutId="feed-tab"
+                        className="absolute bottom-0 inset-x-2 h-[3px] rounded-t-full"
+                        style={{ background: "var(--brand-grad)" }}
+                        transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-2xl mx-auto px-4 py-5">
+          <StoryRail />
+
           <CreatePost onPostCreate={handlePostCreate} />
 
           {/* Posts Feed */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             {posts.map((post, index) => (
               <motion.div
                 key={post.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.3 }}
+                transition={{ delay: Math.min(index, 6) * 0.05, duration: 0.35, ease: "easeOut" }}
               >
                 <PostCard post={post} />
               </motion.div>
             ))}
           </div>
 
-          {/* Load More Indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="text-center py-8"
-          >
-            <p className="text-sm text-gray-400">You're all caught up! 🎉</p>
-          </motion.div>
+          {/* End of feed */}
+          <div className="flex flex-col items-center gap-2 py-10">
+            <div
+              className="flex items-center justify-center w-11 h-11 rounded-full text-[20px]"
+              style={{ background: "var(--brand-50)" }}
+            >
+              🎉
+            </div>
+            <p className="text-[13px] font-medium text-[var(--ink-500)]">
+              You&apos;re all caught up
+            </p>
+            <p className="text-[12px] text-[var(--ink-400)]">
+              Check back later for more moods
+            </p>
+          </div>
         </div>
       </div>
 

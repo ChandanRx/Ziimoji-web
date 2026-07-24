@@ -120,12 +120,12 @@ export default function PostDiscussionPage() {
 
   if (!post) {
     return (
-      <div className="flex h-screen bg-gray-50">
-        <div className="flex-1 overflow-y-auto ml-72 pr-80">
+      <div className="flex h-screen">
+        <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
           <div className="max-w-2xl mx-auto px-4 py-6">
             <div className="text-center py-12">
-              <p className="text-gray-400">Post not found</p>
-              <Link href="/" className="text-purple-600 hover:underline mt-4 inline-block">
+              <p className="text-slate-400">Post not found</p>
+              <Link href="/" className="text-violet-600 hover:underline mt-4 inline-block">
                 Go back home
               </Link>
             </div>
@@ -137,16 +137,16 @@ export default function PostDiscussionPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen">
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto ml-72 pr-80">
+      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
         <div className="max-w-2xl mx-auto px-4 py-6">
           {/* Back Button */}
           <motion.button
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 hover:text-purple-600 mb-4 transition-colors"
+            className="flex items-center gap-2 text-slate-600 hover:text-violet-600 mb-4 transition-colors"
           >
             <FaArrowLeft />
             <span className="font-medium">Back</span>
@@ -169,7 +169,7 @@ export default function PostDiscussionPage() {
             transition={{ delay: 0.1, duration: 0.3 }}
             className="p-6"
           >
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
+            <h2 className="text-xl font-bold text-slate-900 mb-4">
               Discussion ({comments.length})
             </h2>
 
@@ -181,16 +181,16 @@ export default function PostDiscussionPage() {
                   alt={currentUser.username}
                   width={40}
                   height={40}
-                  className="rounded-full border-2 border-gray-200 object-cover"
+                  className="rounded-full border-2 border-slate-200 object-cover"
                 />
                 <div className="flex-1">
                   <textarea
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Write a comment..."
-                    className="w-full p-3 rounded-xl border border-gray-200 
-                             focus:border-purple-500 focus:outline-none
-                             resize-none text-gray-900 placeholder-gray-400
+                    className="w-full p-3 rounded-xl border border-slate-200 
+                             focus:border-violet-400 focus:outline-none
+                             resize-none text-slate-900 placeholder-slate-400
                              transition-all duration-300"
                     rows={3}
                   />
@@ -203,8 +203,8 @@ export default function PostDiscussionPage() {
                       className={`px-4 py-2 rounded-lg font-semibold text-white
                                transition-all duration-300
                                ${newComment.trim()
-                                 ? "bg-purple-600 hover:bg-purple-700"
-                                 : "bg-gray-300 cursor-not-allowed"
+                                 ? "bg-violet-600 hover:bg-violet-700"
+                                 : "bg-slate-200 cursor-not-allowed"
                                }`}
                     >
                       Comment
@@ -222,7 +222,7 @@ export default function PostDiscussionPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + index * 0.05, duration: 0.3 }}
-                  className="flex items-start gap-3 p-4 rounded-xl hover:bg-gray-50 transition-colors"
+                  className="flex items-start gap-3 p-4 rounded-xl hover:bg-slate-50 transition-colors"
                 >
                   <Link href={`/profile/${comment.userId}`}>
                     <img
@@ -230,19 +230,19 @@ export default function PostDiscussionPage() {
                       alt={comment.username}
                       width={40}
                       height={40}
-                      className="rounded-full border-2 border-gray-200 object-cover hover:border-purple-300 transition-colors cursor-pointer"
+                      className="rounded-full border-2 border-slate-200 object-cover hover:border-violet-300 transition-colors cursor-pointer"
                     />
                   </Link>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <Link href={`/profile/${comment.userId}`}>
-                        <span className="font-semibold text-gray-900 hover:text-purple-600 transition-colors cursor-pointer">
+                        <span className="font-semibold text-slate-900 hover:text-violet-600 transition-colors cursor-pointer">
                           {comment.username}
                         </span>
                       </Link>
-                      <span className="text-xs text-gray-500">{comment.timestamp}</span>
+                      <span className="text-xs text-slate-500">{comment.timestamp}</span>
                     </div>
-                    <p className="text-gray-700 text-sm mb-2">{comment.content}</p>
+                    <p className="text-slate-700 text-sm mb-2">{comment.content}</p>
                     <div className="flex items-center gap-4">
                       <motion.button
                         whileHover={{ scale: 1.1 }}
@@ -251,13 +251,13 @@ export default function PostDiscussionPage() {
                         className={`flex items-center gap-1.5 text-sm transition-colors ${
                           comment.isLiked
                             ? "text-red-500"
-                            : "text-gray-500 hover:text-red-500"
+                            : "text-slate-500 hover:text-red-500"
                         }`}
                       >
                         <FaHeart className={comment.isLiked ? "fill-current" : ""} />
                         <span>{comment.likes}</span>
                       </motion.button>
-                      <button className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-purple-600 transition-colors">
+                      <button className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-violet-600 transition-colors">
                         <FaReply />
                         <span>Reply</span>
                       </button>

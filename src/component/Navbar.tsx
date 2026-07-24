@@ -3,279 +3,207 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { Heart, Sparkles, Orbit } from "lucide-react";
 import {
-  FaHome,
-  FaUserFriends,
-  FaRegCommentDots,
-  FaUserCircle,
-  FaSearch,
-  FaFire,
-  FaBookmark,
-  FaBell,
-} from "react-icons/fa";
+  Home, Search, Users, MessageCircle, Flame,
+  Bookmark, Bell, User, Plus, Sparkles,
+} from "lucide-react";
+
+const user = { id: "123", name: "Chandan", handle: "@chandan_user" };
+
+const links = [
+  { href: "/", Icon: Home, label: "Home" },
+  { href: "/search", Icon: Search, label: "Search" },
+  { href: "/followers", Icon: Users, label: "Followers" },
+  { href: "/chats", Icon: MessageCircle, label: "Chats" },
+  { href: "/trending", Icon: Flame, label: "Trending" },
+  { href: "/bookmarks", Icon: Bookmark, label: "Bookmarks" },
+  { href: "/notifications", Icon: Bell, label: "Notifications" },
+  { href: `/profile/${user.id}`, Icon: User, label: "Profile" },
+];
+
+/* The five that earn a slot on a phone */
+const mobileLinks = [links[0], links[1], links[4], links[6], links[7]];
+
+const notificationCount = 3;
+
+const Logo = ({ compact = false }: { compact?: boolean }) => (
+  <Link href="/" className="flex items-center gap-2.5 group">
+    <div
+      className="relative flex items-center justify-center rounded-[14px] shrink-0 transition-transform duration-200 group-hover:scale-105"
+      style={{
+        width: compact ? 32 : 38,
+        height: compact ? 32 : 38,
+        background: "var(--brand-grad)",
+        boxShadow: "0 6px 16px -6px rgba(124,92,255,0.7)",
+      }}
+    >
+      <Sparkles className={compact ? "w-4 h-4 text-white" : "w-[18px] h-[18px] text-white"} />
+    </div>
+    <span
+      className={`font-bold tracking-tight grad-text ${compact ? "text-lg" : "text-[21px]"}`}
+    >
+      Zi!moji
+    </span>
+  </Link>
+);
 
 const Navbar = () => {
   const pathname = usePathname();
-  const user = { id: "123", name: "Chandan" };
-
-  const sidebarRef = useRef<HTMLDivElement | null>(null);
-  const logoRef = useRef<HTMLDivElement | null>(null);
-  const navItemRefs = useRef<HTMLDivElement[]>([]);
-  const userRef = useRef<HTMLDivElement | null>(null);
-
-  const links = [
-    { href: "/", icon: <FaHome />, label: "Home" },
-    { href: "/search", icon: <FaSearch />, label: "Search" },
-    { href: "/followers", icon: <FaUserFriends />, label: "Followers" },
-    { href: "/chats", icon: <FaRegCommentDots />, label: "Chats" },
-    { href: "/trending", icon: <FaFire />, label: "Trending" },
-    { href: "/bookmarks", icon: <FaBookmark />, label: "Bookmarks" },
-    { href: "/notifications", icon: <FaBell />, label: "Notifications" },
-    { href: `/profile/${user.id}`, icon: <FaUserCircle />, label: "Profile" },
-  ];
-
-  const notificationCount = 3; // Example notification count
-
-  const isActive = (href: string) => {
-    if (href === "/") {
-      return pathname === "/";
-    }
-    return pathname.startsWith(href);
-  };
-
-  useEffect(() => {
-    if (!sidebarRef.current) return;
-
-    gsap.fromTo(
-      sidebarRef.current,
-      { x: -80, opacity: 0 },
-      { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }
-    );
-
-    if (logoRef.current) {
-      gsap.fromTo(
-        logoRef.current,
-        { scale: 0.9, opacity: 0, y: -12 },
-        { scale: 1, opacity: 1, y: 0, delay: 0.15, duration: 0.5, ease: "back.out(1.8)" }
-      );
-    }
-
-    if (navItemRefs.current.length) {
-      gsap.fromTo(
-        navItemRefs.current,
-        { x: -20, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.35,
-          ease: "power2.out",
-          stagger: 0.05,
-          delay: 0.25,
-        }
-      );
-    }
-
-    if (userRef.current) {
-      gsap.fromTo(
-        userRef.current,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, delay: 0.45, duration: 0.45, ease: "power2.out" }
-      );
-    }
-  }, []);
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <aside
-      ref={sidebarRef}
-      className="hidden md:flex flex-col w-72 h-screen fixed z-50 bg-gradient-to-b from-white via-slate-50 to-purple-50/60 backdrop-blur-xl border-r border-slate-200/70 shadow-[0_18px_45px_rgba(148,163,184,0.45)]"
-    >
-      {/* Content container */}
-      <div className="relative flex flex-col h-full overflow-y-auto p-6 space-y-4">
-        {/* Logo Section */}
-        <div ref={logoRef}>
-          <Link
-            href="/"
-            className="flex items-center justify-center mb-12 group"
-          >
-            <div className="relative inline-flex items-center justify-center">
-              {/* Outer soft glow ring */}
-              <div className="absolute -inset-3 -z-20 rounded-3xl bg-gradient-to-tr from-fuchsia-300 via-amber-200 to-sky-300 opacity-70 blur-2xl group-hover:opacity-100 transition-opacity duration-300" />
-
-              {/* Icon badge + wordmark */}
-              <div className="relative flex items-center gap-3 rounded-2xl bg-white/90 px-4 py-2 shadow-[0_18px_40px_rgba(148,163,184,0.7)] border border-white/80 backdrop-blur-2xl">
-                {/* Icon bubble */}
-                <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br from-fuchsia-400 via-amber-300 to-sky-400 shadow-[0_10px_25px_rgba(251,113,133,0.55)] overflow-hidden">
-                  <span className="absolute inset-0 opacity-50 bg-[radial-gradient(circle_at_0_0,white,transparent_60%)]" />
-                  <Heart className="relative w-5 h-5 text-white" />
-                </div>
-
-                {/* Wordmark */}
-                <div className="flex flex-col leading-none">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-[26px] font-extrabold tracking-tight bg-gradient-to-r from-fuchsia-500 via-amber-400 to-sky-500 bg-clip-text text-transparent drop-shadow-[0_1px_3px_rgba(251,113,133,0.5)]">
-                      Zi
-                    </span>
-                    <span className="text-[22px] font-semibold tracking-tight text-slate-900">
-                      !moji
-                    </span>
-                  </div>
-                  <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500">
-                    Mood · Emoji · Stories
-                  </span>
-                </div>
-              </div>
-
-              {/* Floating accent icons */}
-              <motion.span
-                className="absolute -top-4 -right-4 text-2xl text-fuchsia-400"
-                animate={{ y: [-4, 4, -4], rotate: [-8, 6, -8] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <Sparkles className="w-5 h-5" />
-              </motion.span>
-              <motion.span
-                className="absolute -bottom-4 -left-3 text-xl text-sky-400"
-                animate={{ y: [3, -3, 3], rotate: [4, -4, 4] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-              >
-                <Orbit className="w-4 h-4" />
-              </motion.span>
-            </div>
-          </Link>
+    <>
+      {/* ─────────── Desktop sidebar ─────────── */}
+      <aside className="hidden md:flex flex-col w-[264px] h-screen fixed z-50 bg-white border-r border-[var(--line)] px-4 pt-6 pb-5">
+        <div className="px-2 mb-7">
+          <Logo />
         </div>
 
-        {/* Nav Links */}
-        <nav className="flex flex-col gap-1 flex-1">
-          {links.map((link, index) => {
-            const active = isActive(link.href);
+        <nav className="flex flex-col gap-0.5 flex-1">
+          {links.map(({ href, Icon, label }) => {
+            const active = isActive(href);
             return (
-              <div
-                key={link.href}
-                ref={(el) => {
-                  if (el) {
-                    navItemRefs.current[index] = el;
-                  }
-                }}
+              <Link
+                key={href}
+                href={href}
+                className="relative flex items-center gap-3.5 px-3.5 py-2.5 rounded-[14px] text-[14px] font-medium transition-colors group"
+                style={{ color: active ? "var(--brand-600)" : "var(--ink-500)" }}
               >
-                <Link
-                  href={link.href}
-                  className={`
-                    relative flex items-center gap-4 px-3 py-2 rounded-xl group
-                    transition-all duration-300 ease-out
-                    ${active
-                      ? "bg-white shadow-[0_14px_35px_rgba(148,163,184,0.5)] ring-1 ring-fuchsia-300/80"
-                      : "bg-transparent hover:bg-white/70 hover:shadow-[0_10px_25px_rgba(148,163,184,0.35)] hover:ring hover:ring-fuchsia-200/70"}
-                  `}
-                >
-                  {/* Active gradient bar */}
-                  {active && (
-                    <motion.div
-                      layoutId="activeUnderline"
-                      className="absolute inset-y-1 left-1 w-[3px] rounded-full bg-gradient-to-b from-fuchsia-400 via-amber-300 to-sky-400"
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                  )}
-
-                  {/* Icon container */}
+                {/* Animated active pill — slides between items */}
+                {active && (
                   <motion.span
-                    className={`
-                      relative z-10 text-lg transition-all duration-300
-                      ${active
-                        ? "text-fuchsia-500 scale-110"
-                        : "text-slate-500 group-hover:text-fuchsia-500 group-hover:scale-105"}
-                    `}
-                    whileHover={{ rotate: active ? 0 : 5 }}
-                  >
-                    {link.icon}
-                  </motion.span>
+                    layoutId="nav-active"
+                    className="absolute inset-0 rounded-[14px]"
+                    style={{ background: "var(--brand-50)" }}
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                )}
 
-                  {/* Label */}
-                  <span
-                    className={`
-                      relative z-10 font-medium text-sm tracking-wide transition-all duration-300
-                      ${active
-                        ? "text-slate-900"
-                        : "text-slate-600 group-hover:text-slate-900"}
-                    `}
-                  >
-                    {link.label}
-                  </span>
-
-                  {/* Notification badge for notifications */}
-                  {link.href === "/notifications" && notificationCount > 0 && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute right-3 flex items-center justify-center w-5 h-5 rounded-full bg-rose-500 text-white text-xs font-bold z-20 shadow-[0_0_14px_rgba(244,63,94,0.8)]"
-                    >
+                <span className="relative flex items-center justify-center w-5 h-5 shrink-0">
+                  <Icon
+                    className={`w-[19px] h-[19px] transition-colors ${
+                      active ? "" : "text-[var(--ink-400)] group-hover:text-[var(--ink-700)]"
+                    }`}
+                    strokeWidth={active ? 2.4 : 2}
+                  />
+                  {href === "/notifications" && notificationCount > 0 && (
+                    <span className="absolute -top-1.5 -right-2 flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold ring-2 ring-white">
                       {notificationCount > 9 ? "9+" : notificationCount}
-                    </motion.div>
+                    </span>
                   )}
-                </Link>
-              </div>
+                </span>
+
+                <span
+                  className={`relative transition-colors ${
+                    active ? "font-semibold" : "group-hover:text-[var(--ink-700)]"
+                  }`}
+                >
+                  {label}
+                </span>
+              </Link>
             );
           })}
+
+          {/* Primary CTA */}
+          <Link
+            href="/?compose=1"
+            className="btn-brand mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-[14px] text-[14px] font-semibold"
+          >
+            <Plus className="w-4 h-4" strokeWidth={2.6} />
+            Create post
+          </Link>
         </nav>
 
-        {/* Bottom user info */}
-        {user && (
-          <div ref={userRef} className="mt-4">
-            <Link
-              href={`/profile/${user.id}`}
-              className="relative flex items-center gap-3 p-3 rounded-2xl
-                       bg-white/90 border border-slate-200/80
-                       hover:bg-white hover:border-fuchsia-300/70 hover:shadow-[0_14px_30px_rgba(148,163,184,0.5)]
-                       transition-all duration-300 group"
-            >
-              {/* Avatar */}
-              <div className="relative">
-                <motion.img
-                  src="https://i.pravatar.cc/120?img=12"
-                  alt="User Avatar"
-                  width={40}
-                  height={40}
-                  className="rounded-full border-2 border-slate-200 object-cover"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 400 }}
-                />
-                {/* Online indicator */}
-                <motion.div
-                  className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white shadow-[0_0_10px_rgba(52,211,153,0.7)]"
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-              </div>
-
-              <div className="flex flex-col flex-1 min-w-0">
-                <span className="text-slate-900 font-semibold text-sm truncate">
-                  {user.name}
-                </span>
-                <div className="flex items-center gap-1.5">
-                  <motion.div
-                    className="w-1.5 h-1.5 bg-emerald-400 rounded-full"
-                    animate={{ opacity: [1, 0.4, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                  <span className="text-slate-500 text-xs font-medium">Online</span>
-                </div>
-              </div>
-
-              {/* Hover arrow */}
-              <motion.div
-                className="text-slate-400 group-hover:text-slate-700 transition-colors text-sm"
-                initial={{ x: -3 }}
-                whileHover={{ x: 0 }}
-              >
-                →
-              </motion.div>
-            </Link>
+        {/* User card */}
+        <Link
+          href={`/profile/${user.id}`}
+          className="flex items-center gap-3 p-2.5 rounded-[16px] border border-[var(--line)] hover:bg-[var(--canvas)] transition-colors"
+        >
+          <div className="relative shrink-0">
+            <img
+              src="https://i.pravatar.cc/120?img=12"
+              alt=""
+              width={38}
+              height={38}
+              className="rounded-full object-cover"
+            />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-white" />
           </div>
-        )}
-      </div>
-    </aside>
+          <div className="flex flex-col min-w-0 leading-tight">
+            <span className="text-[13px] font-semibold text-[var(--ink-900)] truncate">
+              {user.name}
+            </span>
+            <span className="text-[11.5px] text-[var(--ink-400)] truncate">{user.handle}</span>
+          </div>
+        </Link>
+      </aside>
+
+      {/* ─────────── Mobile top bar ─────────── */}
+      <header className="md:hidden fixed top-0 inset-x-0 z-50 h-14 flex items-center justify-between px-4 glass border-b border-[var(--line)]">
+        <Logo compact />
+        <div className="flex items-center gap-1">
+          <Link
+            href="/notifications"
+            aria-label="Notifications"
+            className="relative flex items-center justify-center w-9 h-9 rounded-full text-[var(--ink-500)]"
+          >
+            <Bell className="w-[19px] h-[19px]" />
+            {notificationCount > 0 && (
+              <span className="absolute top-1 right-1 flex items-center justify-center min-w-[15px] h-[15px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold ring-2 ring-white">
+                {notificationCount > 9 ? "9+" : notificationCount}
+              </span>
+            )}
+          </Link>
+          <Link href={`/profile/${user.id}`} className="relative ml-1">
+            <img
+              src="https://i.pravatar.cc/120?img=12"
+              alt=""
+              width={32}
+              height={32}
+              className="rounded-full object-cover"
+            />
+            <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-white" />
+          </Link>
+        </div>
+      </header>
+
+      {/* ─────────── Mobile bottom tabs ─────────── */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 flex items-stretch glass border-t border-[var(--line)] pb-[env(safe-area-inset-bottom)]">
+        {mobileLinks.map(({ href, Icon, label }) => {
+          const active = isActive(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-label={label}
+              className="relative flex-1 flex flex-col items-center justify-center gap-1 py-2.5"
+              style={{ color: active ? "var(--brand-600)" : "var(--ink-400)" }}
+            >
+              {active && (
+                <motion.span
+                  layoutId="tab-active"
+                  className="absolute top-0 h-[3px] w-9 rounded-b-full"
+                  style={{ background: "var(--brand-grad)" }}
+                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                />
+              )}
+              <span className="relative flex items-center justify-center">
+                <Icon className="w-[21px] h-[21px]" strokeWidth={active ? 2.5 : 2} />
+                {href === "/notifications" && notificationCount > 0 && (
+                  <span className="absolute -top-1 -right-2 flex items-center justify-center min-w-[15px] h-[15px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold ring-2 ring-white">
+                    {notificationCount > 9 ? "9+" : notificationCount}
+                  </span>
+                )}
+              </span>
+              <span className={`text-[10px] leading-none ${active ? "font-semibold" : "font-medium"}`}>
+                {label}
+              </span>
+            </Link>
+          );
+        })}
+      </nav>
+    </>
   );
 };
 

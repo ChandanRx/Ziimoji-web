@@ -1,7 +1,103 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 @import "tailwindcss";
 
+@theme inline {
+  --font-sans: var(--font-poppins), system-ui, sans-serif;
+}
+
+:root {
+  /* Surfaces */
+  --surface: #ffffff;
+  --canvas: #f6f7fb;
+  --line: #e9eaf0;
+  --line-soft: #f1f2f7;
+
+  /* Ink */
+  --ink-900: #14151a;
+  --ink-700: #3f4350;
+  --ink-500: #6b7180;
+  --ink-400: #9aa0ae;
+
+  /* Brand */
+  --brand-500: #7c5cff;
+  --brand-600: #6a45ff;
+  --brand-50: #f2eeff;
+  --brand-grad: linear-gradient(135deg, #7c5cff 0%, #b65cff 50%, #ff5ca8 100%);
+
+  /* Elevation — layered, low-opacity, never muddy */
+  --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 10px -4px rgba(16, 24, 40, 0.08);
+  --shadow-md: 0 1px 2px rgba(16, 24, 40, 0.04), 0 12px 28px -12px rgba(16, 24, 40, 0.14);
+  --shadow-lg: 0 2px 4px rgba(16, 24, 40, 0.04), 0 24px 48px -20px rgba(16, 24, 40, 0.2);
+}
 
 body {
-  font-family: 'Ubuntu', sans-serif;
+  background: var(--canvas);
+  color: var(--ink-900);
+}
+
+/* ── Primitives ─────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Sticky bars stay solid. Translucent-and-blurred looks nice, but some engines
+   report backdrop-filter support via @supports and then never composite it,
+   leaving see-through bars with content bleeding under them. */
+.glass {
+  background: #ffffff;
+}
+
+.grad-text {
+  background: var(--brand-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-brand {
+  background: var(--brand-grad);
+  color: #fff;
+  box-shadow: 0 6px 18px -6px rgba(124, 92, 255, 0.6);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+.btn-brand:hover:not(:disabled) {
+  filter: brightness(1.06);
+  box-shadow: 0 10px 24px -8px rgba(124, 92, 255, 0.7);
+}
+.btn-brand:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* Gradient ring for story avatars */
+.story-ring {
+  background: var(--brand-grad);
+  padding: 2.5px;
+  border-radius: 9999px;
+}
+.story-ring--seen {
+  background: var(--line);
+}
+
+/* Hide scrollbars on horizontal rails while keeping them scrollable */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
