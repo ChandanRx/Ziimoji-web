@@ -51,14 +51,14 @@ export const currentUser: Person = {
 export const people: Person[] = [
   currentUser,
   { id: "user1", username: "emoji_lover",   name: "Aria Emoji",    avatar: avatar(1),  bio: "collecting little joys, one emoji at a time 🌸", mood: "Happy",     followers: 12500, following: 480, posts: 320, isFollowing: true,  followsYou: true },
-  { id: "user2", username: "mood_master",   name: "Kai Moods",     avatar: avatar(2),  bio: "curating the internet's feelings · DM for collabs",  mood: "Cool",      followers: 88200, following: 210, posts: 910, isVerified: true, isFollowing: true },
-  { id: "user3", username: "happy_vibes",   name: "Sol Vibes",     avatar: avatar(3),  bio: "sunshine in text form ☀️",                          mood: "Love",      followers: 6200,  following: 640, posts: 210, followsYou: true },
-  { id: "user4", username: "cool_emojis",   name: "Rin Cool",      avatar: avatar(4),  bio: "keeping it 😎 since forever",                        mood: "Cool",      followers: 9800,  following: 150, posts: 145 },
-  { id: "user5", username: "calm_soul",     name: "Noor Calm",     avatar: avatar(7),  bio: "deep breaths & softer days 🫧",                      mood: "Calm",      followers: 3100,  following: 290, posts: 88,  isFollowing: true },
-  { id: "user6", username: "funny_moments", name: "Beto Laughs",   avatar: avatar(6),  bio: "here for the punchlines 😂",                         mood: "Funny",     followers: 18400, following: 730, posts: 402, followsYou: true },
+  { id: "user2", username: "mood_master",   name: "Kai Moods",     avatar: avatar(2),  bio: "curating the internet's feelings · DM for collabs",  mood: "Excited",   followers: 88200, following: 210, posts: 910, isVerified: true, isFollowing: true },
+  { id: "user3", username: "happy_vibes",   name: "Sol Vibes",     avatar: avatar(3),  bio: "sunshine in text form ☀️",                          mood: "Happy",     followers: 6200,  following: 640, posts: 210, followsYou: true },
+  { id: "user4", username: "cool_emojis",   name: "Rin Cool",      avatar: avatar(4),  bio: "keeping it chill since forever",                     mood: "Bored",     followers: 9800,  following: 150, posts: 145 },
+  { id: "user5", username: "calm_soul",     name: "Noor Calm",     avatar: avatar(7),  bio: "deep breaths & softer days 🫧",                      mood: "Sad",       followers: 3100,  following: 290, posts: 88,  isFollowing: true },
+  { id: "user6", username: "funny_moments", name: "Beto Laughs",   avatar: avatar(6),  bio: "here for the punchlines 😂",                         mood: "Happy",     followers: 18400, following: 730, posts: 402, followsYou: true },
   { id: "user7", username: "trending_now",  name: "Zed Trends",    avatar: avatar(5),  bio: "if it's rising, i already reposted it 🔥",           mood: "Excited",   followers: 15700, following: 55,  posts: 660, isVerified: true },
-  { id: "user8", username: "night_owl",     name: "Mira Night",    avatar: avatar(8),  bio: "3am thoughts, tastefully arranged 🌙",               mood: "Tired",     followers: 4700,  following: 380, posts: 176 },
-  { id: "user9", username: "surprise_me",   name: "Ivo Wonder",    avatar: avatar(9),  bio: "wide-eyed at everything 😲",                         mood: "Surprised", followers: 2100,  following: 210, posts: 63,  followsYou: true },
+  { id: "user8", username: "night_owl",     name: "Mira Night",    avatar: avatar(8),  bio: "3am thoughts, tastefully arranged 🌙",               mood: "Bored",     followers: 4700,  following: 380, posts: 176 },
+  { id: "user9", username: "surprise_me",   name: "Ivo Wonder",    avatar: avatar(9),  bio: "wide-eyed at everything 😲",                         mood: "Excited",   followers: 2100,  following: 210, posts: 63,  followsYou: true },
 ];
 
 export const peopleById: Record<string, Person> = Object.fromEntries(

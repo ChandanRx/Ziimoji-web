@@ -29,14 +29,9 @@ const DEFAULT_GLYPHS = [GLYPH.heart, GLYPH.sparkles, GLYPH.star];
 const MOOD_GLYPHS: Record<string, string[]> = {
   Happy: [cp(0x1f60a), GLYPH.sparkles, GLYPH.star],
   Sad: [cp(0x1f622), cp(0x1f4a7), GLYPH.sparkles],
-  Angry: [cp(0x1f525), cp(0x1f4a5), GLYPH.star],
-  Love: [GLYPH.heart, cp(0x1f496), cp(0x1f495)],
   Excited: [cp(0x1f929), GLYPH.star, GLYPH.sparkles],
-  Cool: [cp(0x1f60e), GLYPH.star, GLYPH.sparkles],
-  Funny: [cp(0x1f602), GLYPH.sparkles, GLYPH.star],
-  Surprised: [cp(0x1f632), GLYPH.sparkles, GLYPH.star],
-  Calm: [cp(0x1f60c), cp(0x1f338), GLYPH.sparkles],
-  Tired: [cp(0x1f634), cp(0x1f4a4), GLYPH.star],
+  Angry: [cp(0x1f525), cp(0x1f4a5), GLYPH.star],
+  Bored: [cp(0x1f971), cp(0x1f4a4), GLYPH.star],
 };
 
 /** Confetti glyph set themed to a mood label. */
