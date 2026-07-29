@@ -7,6 +7,7 @@ import Link from "next/link";
 import PostCard from "@/component/PostCard";
 import RightSidebar from "@/component/RightSidebar";
 import { FaArrowLeft, FaHeart, FaReply } from "react-icons/fa";
+import { celebrate } from "@/lib/confetti";
 
 interface Comment {
   id: string;
@@ -28,7 +29,7 @@ const mockPosts: Record<string, any> = {
     userAvatar: "https://i.pravatar.cc/120?img=12",
     content: "A few weeks ago, one of our clients flew down to India to work closely with our team. We were building a platform that's set to change how people book hotel experiences.",
     mood: "Happy",
-    moodEmoji: "😊",
+    moodEmoji: "/emoji/happy.lottie",
     likes: 12,
     comments: 5,
     timestamp: "2 hours ago",
@@ -44,7 +45,7 @@ const mockComments: Comment[] = [
     userId: "user2",
     username: "emoji_lover",
     userAvatar: "https://i.pravatar.cc/120?img=1",
-    content: "This is amazing! Love the concept! 😍",
+    content: "This is amazing! Love the concept!",
     timestamp: "1 hour ago",
     likes: 5,
     isLiked: false,
@@ -54,7 +55,7 @@ const mockComments: Comment[] = [
     userId: "user3",
     username: "mood_master",
     userAvatar: "https://i.pravatar.cc/120?img=2",
-    content: "Great work! Can't wait to see more updates! 🚀",
+    content: "Great work! Can't wait to see more updates!",
     timestamp: "45 minutes ago",
     likes: 3,
     isLiked: true,
@@ -64,7 +65,7 @@ const mockComments: Comment[] = [
     userId: "user4",
     username: "happy_vibes",
     userAvatar: "https://i.pravatar.cc/120?img=3",
-    content: "So inspiring! Keep it up! ✨",
+    content: "So inspiring! Keep it up!",
     timestamp: "30 minutes ago",
     likes: 2,
     isLiked: false,
@@ -159,7 +160,14 @@ export default function PostDiscussionPage() {
             transition={{ duration: 0.3 }}
             className="mb-6"
           >
-            <PostCard post={post} />
+            <PostCard
+              post={post}
+              onLike={(liked) => {
+                // A bigger, page-level celebration when liking from the post's
+                // own detail page.
+                if (liked) celebrate({ x: 0.5, y: 0.35 });
+              }}
+            />
           </motion.div>
 
           {/* Comments Section */}

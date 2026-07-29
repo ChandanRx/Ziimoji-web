@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { TrendingUp, BadgeCheck } from "lucide-react";
 import { moods } from "@/lib/moods";
+import AnimatedEmoji from "@/component/AnimatedEmoji";
 
 interface RightSidebarProps {
   currentUser?: {
@@ -78,7 +79,7 @@ const RightSidebar = ({ currentUser }: RightSidebarProps) => {
                 className="flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 rounded-full text-[11.5px] font-semibold transition-transform hover:scale-105"
                 style={{ background: mood.chip, color: mood.accent }}
               >
-                <span className="text-[13px] leading-none">{mood.emoji}</span>
+                <AnimatedEmoji src={mood.lottie} size={16} label={mood.label} />
                 {mood.label}
               </Link>
             ))}
@@ -160,7 +161,7 @@ const RightSidebar = ({ currentUser }: RightSidebarProps) => {
               </a>
             ))}
           </div>
-          <div className="text-[11px] text-[var(--ink-400)]">© 2025 Zi!moji</div>
+          <div className="text-[11px] text-[var(--ink-400)]">&copy; 2025 Zi!moji</div>
         </div>
       </div>
     </aside>

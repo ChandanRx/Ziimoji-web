@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Image as ImageIcon, Send, Loader2, X } from "lucide-react";
 import { moods } from "@/lib/moods";
+import AnimatedEmoji from "@/component/AnimatedEmoji";
 
 interface CreatePostProps {
   onPostCreate?: (post: {
@@ -54,7 +55,7 @@ const CreatePost = ({ onPostCreate }: CreatePostProps) => {
     onPostCreate?.({
       content: content.trim(),
       mood: selectedMood.label,
-      moodEmoji: selectedMood.emoji,
+      moodEmoji: selectedMood.lottie,
       imageUrl: imageUrl || undefined,
     });
     reset();
@@ -101,14 +102,12 @@ const CreatePost = ({ onPostCreate }: CreatePostProps) => {
           <span className="flex-1 px-4 py-2.5 rounded-full bg-[var(--canvas)] text-[14px] text-[var(--ink-400)] border border-[var(--line)] truncate">
             What&apos;s making you feel {selectedMood.label.toLowerCase()} today?
           </span>
-          <motion.span
-            className="shrink-0 flex items-center justify-center w-10 h-10 rounded-full text-[19px]"
+          <span
+            className="shrink-0 flex items-center justify-center w-10 h-10 rounded-full"
             style={{ background: selectedMood.chip }}
-            animate={{ y: [0, -3, 0] }}
-            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
           >
-            {selectedMood.emoji}
-          </motion.span>
+            <AnimatedEmoji src={selectedMood.lottie} size={24} label={`Feeling ${selectedMood.label.toLowerCase()}`} />
+          </span>
         </button>
       )}
 
@@ -125,14 +124,16 @@ const CreatePost = ({ onPostCreate }: CreatePostProps) => {
             style={{ background: selectedMood.chip }}
           >
             <div className="flex items-center gap-2">
+              {/* One-shot entrance pop when the mood changes; the Lottie inside
+                  handles the continuous animation. */}
               <motion.span
-                className="text-[16px] leading-none"
+                className="flex leading-none"
                 key={selectedMood.label}
                 initial={{ scale: 0.5, rotate: -20 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: "spring", stiffness: 500, damping: 18 }}
               >
-                {selectedMood.emoji}
+                <AnimatedEmoji src={selectedMood.lottie} size={20} label={`Feeling ${selectedMood.label.toLowerCase()}`} />
               </motion.span>
               <span
                 className="text-[12px] font-semibold"
@@ -218,13 +219,18 @@ const CreatePost = ({ onPostCreate }: CreatePostProps) => {
                       onClick={() => setSelectedMood(mood)}
                       title={mood.label}
                       whileTap={{ scale: 0.9 }}
-                      className="relative flex items-center justify-center w-10 h-10 rounded-full text-[18px] transition-colors"
+                      className="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors"
                       style={{
                         background: active ? mood.chip : "var(--canvas)",
                         boxShadow: active ? `0 0 0 2px ${mood.accent}` : "none",
                       }}
                     >
-                      <span className={active ? "" : "grayscale opacity-55"}>{mood.emoji}</span>
+                      <AnimatedEmoji
+                        src={mood.lottie}
+                        size={22}
+                        label={mood.label}
+                        className={active ? "flex" : "flex grayscale opacity-55"}
+                      />
                     </motion.button>
                   );
                 })}

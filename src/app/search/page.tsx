@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X, TrendingUp, ArrowUpRight } from "lucide-react";
 import RightSidebar from "@/component/RightSidebar";
 import { moods } from "@/lib/moods";
+import AnimatedEmoji from "@/component/AnimatedEmoji";
 
 const counts: Record<string, string> = {
   Happy: "12.5k", Sad: "8.2k", Angry: "5.1k", Love: "25.3k",
@@ -108,10 +109,10 @@ const SearchContent = () => {
                       className="flex items-center gap-3 px-4 py-3 rounded-[16px] text-left w-full group bg-white border border-[var(--line)] hover:shadow-[var(--shadow-md)] transition-shadow"
                     >
                       <div
-                        className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0 text-[19px]"
+                        className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
                         style={{ background: mood.chip }}
                       >
-                        {mood.emoji}
+                        <AnimatedEmoji src={mood.lottie} size={24} label={mood.label} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[13.5px] font-semibold text-[var(--ink-900)] leading-tight truncate">

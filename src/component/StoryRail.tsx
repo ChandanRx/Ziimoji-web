@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "motion/react";
 import { Plus } from "lucide-react";
 import { getMood } from "@/lib/moods";
+import AnimatedEmoji from "@/component/AnimatedEmoji";
 
 interface Story {
   id: string;
@@ -55,7 +55,7 @@ const StoryRail = () => (
         </span>
       </button>
 
-      {stories.map((story, i) => {
+      {stories.map((story) => {
         const mood = getMood(story.mood);
         return (
           <button key={story.id} className="flex flex-col items-center gap-1.5 shrink-0 w-[64px] group">
@@ -72,20 +72,13 @@ const StoryRail = () => (
                 </div>
               </div>
 
-              {/* Mood bubble — gently floating */}
-              <motion.span
-                className="absolute -bottom-1 -right-1 flex items-center justify-center w-[22px] h-[22px] rounded-full text-[12px] ring-2 ring-white"
+              {/* Mood bubble — the Lottie animates itself, so no extra loop. */}
+              <span
+                className="absolute -bottom-1 -right-1 flex items-center justify-center w-[22px] h-[22px] rounded-full ring-2 ring-white"
                 style={{ background: mood.chip }}
-                animate={{ y: [0, -2.5, 0] }}
-                transition={{
-                  duration: 2.6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: i * 0.18,
-                }}
               >
-                {mood.emoji}
-              </motion.span>
+                <AnimatedEmoji src={mood.lottie} size={15} label={mood.label} />
+              </span>
             </div>
             <span className="text-[11px] text-[var(--ink-500)] font-medium truncate w-full text-center">
               {story.username}

@@ -1,7 +1,12 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: `dark:` utilities activate only under a `.dark`
+   ancestor, so components stay in sync with the (currently light) app shell
+   while remaining fully dark-ready. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
-  --font-sans: var(--font-poppins), system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
 }
 
 :root {

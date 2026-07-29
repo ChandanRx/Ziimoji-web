@@ -6,6 +6,7 @@ import PostCard from "@/component/PostCard";
 import RightSidebar from "@/component/RightSidebar";
 import CreatePost from "@/component/CreatePost";
 import StoryRail from "@/component/StoryRail";
+import AnimatedEmoji from "@/component/AnimatedEmoji";
 
 // Mock posts data
 const initialPosts = [
@@ -16,7 +17,7 @@ const initialPosts = [
     userAvatar: "https://i.pravatar.cc/120?img=12",
     content: "A few weeks ago, one of our clients flew down to India to work closely with our team. We were building a platform that's set to change how people book hotel experiences.",
     mood: "Happy",
-    moodEmoji: "😊",
+    moodEmoji: "/emoji/happy.lottie",
     likes: 12,
     comments: 5,
     timestamp: "2 hours ago",
@@ -32,7 +33,7 @@ const initialPosts = [
     userAvatar: "https://i.pravatar.cc/120?img=1",
     content: "A few weeks ago, one of our clients flew down to India to work closely with our team. We were building a platform that's set to change how people book hotel experiences.",
     mood: "Angry",
-    moodEmoji: "😠",
+    moodEmoji: "/emoji/angry.lottie",
     likes: 12,
     comments: 3,
     timestamp: "4 hours ago",
@@ -48,7 +49,7 @@ const initialPosts = [
     userAvatar: "https://i.pravatar.cc/120?img=2",
     content: "A few weeks ago, one of our clients flew down to India to work closely with our team. We were building a platform that's set to change how people book hotel experiences.",
     mood: "Excited",
-    moodEmoji: "🤩",
+    moodEmoji: "/emoji/excited.lottie",
     likes: 12,
     comments: 5,
     timestamp: "6 hours ago",
@@ -64,7 +65,7 @@ const initialPosts = [
     userAvatar: "https://i.pravatar.cc/120?img=3",
     content: "A few weeks ago, one of our clients flew down to India to work closely with our team. We were building a platform that's set to change how people book hotel experiences.",
     mood: "Love",
-    moodEmoji: "❤️",
+    moodEmoji: "/emoji/love.lottie",
     likes: 12,
     comments: 5,
     timestamp: "8 hours ago",
@@ -80,7 +81,7 @@ const initialPosts = [
     userAvatar: "https://i.pravatar.cc/120?img=4",
     content: "A few weeks ago, one of our clients flew down to India to work closely with our team. We were building a platform that's set to change how people book hotel experiences.",
     mood: "Cool",
-    moodEmoji: "😎",
+    moodEmoji: "/emoji/cool.lottie",
     likes: 12,
     comments: 5,
     timestamp: "10 hours ago",
@@ -96,7 +97,7 @@ const initialPosts = [
     userAvatar: "https://i.pravatar.cc/120?img=5",
     content: "A few weeks ago, one of our clients flew down to India to work closely with our team. We were building a platform that's set to change how people book hotel experiences.",
     mood: "Tired",
-    moodEmoji: "😴",
+    moodEmoji: "/emoji/tired.lottie",
     likes: 12,
     comments: 5,
     timestamp: "12 hours ago",
@@ -112,7 +113,7 @@ const initialPosts = [
     userAvatar: "https://i.pravatar.cc/120?img=6",
     content: "A few weeks ago, one of our clients flew down to India to work closely with our team. We were building a platform that's set to change how people book hotel experiences.",
     mood: "Funny",
-    moodEmoji: "😂",
+    moodEmoji: "/emoji/funny.lottie",
     likes: 12,
     comments: 5,
     timestamp: "14 hours ago",
@@ -128,7 +129,7 @@ const initialPosts = [
     userAvatar: "https://i.pravatar.cc/120?img=7",
     content: "A few weeks ago, one of our clients flew down to India to work closely with our team. We were building a platform that's set to change how people book hotel experiences.",
     mood: "Calm",
-    moodEmoji: "😌",
+    moodEmoji: "/emoji/calm.lottie",
     likes: 12,
     comments: 5,
     timestamp: "16 hours ago",
@@ -244,10 +245,10 @@ export default function Home() {
           {/* End of feed */}
           <div className="flex flex-col items-center gap-2 py-10">
             <div
-              className="flex items-center justify-center w-11 h-11 rounded-full text-[20px]"
+              className="flex items-center justify-center w-11 h-11 rounded-full"
               style={{ background: "var(--brand-50)" }}
             >
-              🎉
+              <AnimatedEmoji src="/emoji/party.lottie" size={24} label="Celebration" />
             </div>
             <p className="text-[13px] font-medium text-[var(--ink-500)]">
               You&apos;re all caught up
