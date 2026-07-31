@@ -8,11 +8,10 @@ import { moods } from "@/lib/moods";
 import AnimatedEmoji from "@/component/AnimatedEmoji";
 
 const counts: Record<string, string> = {
-  Happy: "12.5k", Sad: "8.2k", Angry: "5.1k", Love: "25.3k",
-  Excited: "15.7k", Cool: "9.8k", Funny: "18.4k", Surprised: "6.9k",
+  Happy: "12.5k", Sad: "8.2k", Excited: "15.7k", Angry: "5.1k", Bored: "6.9k",
 };
 
-const moodSuggestions = moods.slice(0, 8).map((m) => ({ ...m, count: counts[m.label] ?? "1k" }));
+const moodSuggestions = moods.map((m) => ({ ...m, count: counts[m.label] ?? "1k" }));
 
 const trendingTopics = [
   { topic: "#HappyMood",    posts: "12.5K posts", trending: true,  change: "+24%" },
@@ -100,7 +99,7 @@ const SearchContent = () => {
             <div className="space-y-8">
               {/* Quick search */}
               <section>
-                <SectionLabel label="Quick Search" sub="8 moods" />
+                <SectionLabel label="Quick Search" sub={`${moodSuggestions.length} moods`} />
                 <div className="grid grid-cols-2 gap-3">
                   {moodSuggestions.map((mood) => (
                     <button

@@ -23,8 +23,8 @@ const suggestions = [
 
 const trending = [
   { tag: "#MorningVibes", posts: "12.5K", mood: "Happy" },
-  { tag: "#LateNight",    posts: "8.9K",  mood: "Calm" },
-  { tag: "#Grateful",     posts: "6.2K",  mood: "Love" },
+  { tag: "#LateNight",    posts: "8.9K",  mood: "Bored" },
+  { tag: "#Grateful",     posts: "6.2K",  mood: "Excited" },
   { tag: "#Overthinking", posts: "4.7K",  mood: "Sad" },
 ];
 

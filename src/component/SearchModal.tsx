@@ -4,8 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
-  Search, X, Smile, Frown, Angry, Heart,
-  Sparkles, SunMedium, Laugh, Zap,
+  Search, X, Smile, Frown, Angry, Sparkles, Moon,
   TrendingUp, Clock,
 } from "lucide-react";
 
@@ -15,14 +14,11 @@ interface SearchModalProps {
 }
 
 const moodSuggestions = [
-  { label: "Happy",     Icon: Smile,     accent: "#d97706", bg: "#fef9c3" },
-  { label: "Sad",       Icon: Frown,     accent: "#4f46e5", bg: "#e0e7ff" },
-  { label: "Angry",     Icon: Angry,     accent: "#dc2626", bg: "#fee2e2" },
-  { label: "Love",      Icon: Heart,     accent: "#db2777", bg: "#fce7f3" },
-  { label: "Excited",   Icon: Sparkles,  accent: "#ea580c", bg: "#fed7aa" },
-  { label: "Cool",      Icon: SunMedium, accent: "#0891b2", bg: "#bae6fd" },
-  { label: "Funny",     Icon: Laugh,     accent: "#9333ea", bg: "#e9d5ff" },
-  { label: "Surprised", Icon: Zap,       accent: "#059669", bg: "#a7f3d0" },
+  { label: "Happy",   Icon: Smile,    accent: "#d97706", bg: "#fef9c3" },
+  { label: "Sad",     Icon: Frown,    accent: "#4f46e5", bg: "#e0e7ff" },
+  { label: "Excited", Icon: Sparkles, accent: "#ea580c", bg: "#fed7aa" },
+  { label: "Angry",   Icon: Angry,    accent: "#dc2626", bg: "#fee2e2" },
+  { label: "Bored",   Icon: Moon,     accent: "#475569", bg: "#e2e8f0" },
 ];
 
 const trendingTags = ["#MorningVibes", "#LateNight", "#GoodDay", "#Overthinking", "#Grateful"];

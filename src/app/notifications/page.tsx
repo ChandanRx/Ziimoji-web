@@ -33,12 +33,12 @@ const meta: Record<NotifType, { Icon: LucideIcon; color: string; bg: string }> =
 const notifs: Notif[] = [
   { id: "n1", type: "like",    personId: "user1", text: "liked your post", time: "2m",  mood: "Happy",   postId: "1", unread: true },
   { id: "n2", type: "follow",  personId: "user2", text: "started following you", time: "14m", unread: true },
-  { id: "n3", type: "comment", personId: "user6", text: "commented: \"this is such a vibe 😂\"", time: "38m", mood: "Funny", postId: "1", unread: true },
-  { id: "n4", type: "mention", personId: "user3", text: "mentioned you in a post", time: "1h", mood: "Love", postId: "2", unread: false },
+  { id: "n3", type: "comment", personId: "user6", text: "commented: \"this is such a vibe 😂\"", time: "38m", mood: "Happy", postId: "1", unread: true },
+  { id: "n4", type: "mention", personId: "user3", text: "mentioned you in a post", time: "1h", mood: "Sad", postId: "2", unread: false },
   { id: "n5", type: "repost",  personId: "user7", text: "reposted your mood", time: "2h", mood: "Excited", postId: "2", unread: false },
-  { id: "n6", type: "like",    personId: "user4", text: "and 24 others liked your post", time: "3h", mood: "Cool", postId: "1", unread: false },
+  { id: "n6", type: "like",    personId: "user4", text: "and 24 others liked your post", time: "3h", mood: "Bored", postId: "1", unread: false },
   { id: "n7", type: "follow",  personId: "user9", text: "started following you", time: "5h", unread: false },
-  { id: "n8", type: "comment", personId: "user5", text: "commented: \"needed this today 🫧\"", time: "8h", mood: "Calm", postId: "2", unread: false },
+  { id: "n8", type: "comment", personId: "user5", text: "commented: \"needed this today 🫧\"", time: "8h", mood: "Angry", postId: "2", unread: false },
 ];
 
 const filters = ["All", "Mentions", "Follows"] as const;

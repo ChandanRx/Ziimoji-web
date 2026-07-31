@@ -14,11 +14,11 @@ interface Story {
 
 const stories: Story[] = [
   { id: "1", username: "emoji_lover",  avatar: "https://i.pravatar.cc/120?img=1", mood: "Excited" },
-  { id: "2", username: "mood_master",  avatar: "https://i.pravatar.cc/120?img=2", mood: "Cool" },
+  { id: "2", username: "mood_master",  avatar: "https://i.pravatar.cc/120?img=2", mood: "Excited" },
   { id: "3", username: "happy_vibes",  avatar: "https://i.pravatar.cc/120?img=3", mood: "Happy" },
-  { id: "4", username: "cool_emojis",  avatar: "https://i.pravatar.cc/120?img=4", mood: "Funny", seen: true },
-  { id: "5", username: "trending_now", avatar: "https://i.pravatar.cc/120?img=5", mood: "Love" },
-  { id: "6", username: "calm_soul",    avatar: "https://i.pravatar.cc/120?img=7", mood: "Calm", seen: true },
+  { id: "4", username: "cool_emojis",  avatar: "https://i.pravatar.cc/120?img=4", mood: "Bored", seen: true },
+  { id: "5", username: "trending_now", avatar: "https://i.pravatar.cc/120?img=5", mood: "Sad" },
+  { id: "6", username: "calm_soul",    avatar: "https://i.pravatar.cc/120?img=7", mood: "Angry", seen: true },
 ];
 
 const StoryRail = () => (
