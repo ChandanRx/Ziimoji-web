@@ -6,8 +6,7 @@ import { motion } from "motion/react";
 import { Bookmark } from "lucide-react";
 import PostCard from "@/component/PostCard";
 import RightSidebar from "@/component/RightSidebar";
-import AnimatedEmoji from "@/component/AnimatedEmoji";
-import { moods } from "@/lib/moods";
+import { genres } from "@/lib/genres";
 import { feed } from "@/lib/mockData";
 
 export default function BookmarksPage() {
@@ -16,12 +15,12 @@ export default function BookmarksPage() {
     () => feed.map((p, i) => ({ ...p, isBookmarked: true, id: `saved-${i}` })).slice(0, 8),
     []
   );
-  const [activeMood, setActiveMood] = useState<string>("All");
+  const [activeGenre, setActiveGenre] = useState<string>("All");
 
-  const usedMoods = Array.from(new Set(saved.map((p) => p.mood)));
-  const filterMoods = moods.filter((m) => usedMoods.includes(m.label));
+  const usedGenres = Array.from(new Set(saved.map((p) => p.genre)));
+  const filterGenres = genres.filter((g) => usedGenres.includes(g.label));
 
-  const shown = activeMood === "All" ? saved : saved.filter((p) => p.mood === activeMood);
+  const shown = activeGenre === "All" ? saved : saved.filter((p) => p.genre === activeGenre);
 
   return (
     <div className="flex h-screen">
@@ -31,41 +30,42 @@ export default function BookmarksPage() {
           <div className="max-w-2xl mx-auto px-4 py-4">
             <div className="flex items-center gap-2">
               <div className="flex items-center justify-center w-8 h-8 rounded-[10px]" style={{ background: "var(--brand-grad)" }}>
-                <Bookmark className="w-[17px] h-[17px] text-white" fill="currentColor" />
+                <Bookmark className="w-[17px] h-[17px] text-[var(--brand-ink)]" fill="currentColor" />
               </div>
               <div>
-                <h1 className="text-[22px] font-bold tracking-tight text-[var(--ink-900)] leading-none">Bookmarks</h1>
-                <p className="text-[12.5px] text-[var(--ink-400)] mt-1">{saved.length} saved moods</p>
+                <h1 className="text-[22px] font-bold tracking-tight text-[var(--ink-900)] leading-none">Grimoire</h1>
+                <p className="text-[12.5px] text-[var(--ink-400)] mt-1">{saved.length} saved tales</p>
               </div>
             </div>
 
-            {/* Mood filter chips */}
+            {/* Genre filter chips */}
             <div className="flex gap-2 mt-3 overflow-x-auto no-scrollbar pb-1">
               <button
-                onClick={() => setActiveMood("All")}
+                onClick={() => setActiveGenre("All")}
                 className="shrink-0 px-3.5 py-1.5 rounded-full text-[12.5px] font-semibold transition-colors"
                 style={
-                  activeMood === "All"
-                    ? { background: "var(--brand-grad)", color: "#fff" }
+                  activeGenre === "All"
+                    ? { background: "var(--brand-grad)", color: "var(--brand-ink)" }
                     : { background: "var(--canvas)", color: "var(--ink-500)" }
                 }
               >
                 All
               </button>
-              {filterMoods.map((m) => {
-                const active = activeMood === m.label;
+              {filterGenres.map((g) => {
+                const active = activeGenre === g.label;
+                const Icon = g.Icon;
                 return (
                   <button
-                    key={m.label}
-                    onClick={() => setActiveMood(m.label)}
+                    key={g.label}
+                    onClick={() => setActiveGenre(g.label)}
                     className="shrink-0 flex items-center gap-1.5 pl-2 pr-3 py-1.5 rounded-full text-[12.5px] font-semibold transition-transform hover:scale-105"
                     style={{
-                      background: active ? m.accent : m.chip,
-                      color: active ? "#fff" : m.accent,
+                      background: active ? g.accent : g.chip,
+                      color: active ? "#fff" : g.accent,
                     }}
                   >
-                    <AnimatedEmoji src={m.lottie} size={16} label={m.label} />
-                    {m.label}
+                    <Icon className="w-[14px] h-[14px]" strokeWidth={2.2} />
+                    {g.label}
                   </button>
                 );
               })}
@@ -93,14 +93,14 @@ export default function BookmarksPage() {
                 <Bookmark className="w-6 h-6 text-[var(--brand-600)]" />
               </div>
               <div>
-                <p className="text-[15px] font-semibold text-[var(--ink-700)]">No saved moods yet</p>
+                <p className="text-[15px] font-semibold text-[var(--ink-700)]">Your grimoire is empty</p>
                 <p className="text-[13px] text-[var(--ink-400)] mt-1 max-w-[34ch]">
-                  Tap the bookmark on any post to keep it here for later.
+                  Bookmark any tale and it will be kept here for when you need to read in the dark.
                 </p>
               </div>
               <Link
                 href="/"
-                className="mt-1 btn-brand px-5 py-2.5 rounded-full text-[13px] font-semibold text-white"
+                className="mt-1 btn-brand px-5 py-2.5 rounded-full text-[13px] font-semibold"
               >
                 Explore the feed
               </Link>

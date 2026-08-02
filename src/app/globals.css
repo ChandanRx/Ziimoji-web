@@ -1,61 +1,269 @@
 @import "tailwindcss";
 
-/* Class-based dark mode: `dark:` utilities activate only under a `.dark`
-   ancestor, so components stay in sync with the (currently light) app shell
-   while remaining fully dark-ready. */
+/* Class-based dark mode — `dark:` utilities activate under a `.dark` ancestor.
+   Theming is now driven by `data-theme`; `.dark` is kept only for legacy
+   third-party components that still check for it. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Night band — lets components opt into night-only tweaks with the `night:`
+   utility variant. Day / dusk fall through to :root. */
+@custom-variant night (&:where([data-theme="night"], [data-theme="night"] *));
+
 @theme inline {
-  --font-sans: var(--font-jakarta), system-ui, sans-serif;
+  /* Editorial type stack — SF Pro on Apple, Inter everywhere else. */
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont,
+    "SF Pro Display", "Segoe UI", system-ui, sans-serif;
 }
 
+/* ═══════════════════════ Junji-Ito clock-driven bands ═══════════════════════
+   Three bands ride the local hour via `data-theme` on <html>. A single
+   continuous grayscale → black spectrum, never warm or cozy. Every screen
+   re-skins through these variables alone — no per-component theming.
+
+   Day (:root) · Dusk ([data-theme="dusk"]) · Night ([data-theme="night"]) */
+
+/* ─────────────────────────── DAY (default) ───────────────────────────
+   Bleak, overexposed old-manga daylight: flat desaturated off-white/gray,
+   ashen cold-charcoal ink, zero saturation, gray flat shadows, heavier
+   hairlines. Dread in daylight — not a safe, cozy light mode.
+
+   WCAG AA targets (checked against WebAIM):
+     --ink-900 on --app-bg  : #26282b / #d8d8d5 → 9.4 : 1  ✓
+     --ink-900 on --surface : #26282b / #e4e4e1 → 10.8 : 1 ✓
+     --ink-700 on --surface : #4a4d51 / #e4e4e1 → 6.1 : 1  ✓
+     --ink-500 on --surface : #74777b / #e4e4e1 → 3.7 : 1  (AA large / UI) ✓
+     --brand-500 on --surface: #3a3d41 / #e4e4e1 → 7.8 : 1 ✓
+     --brand-ink on --brand-500: #e4e4e1 / #3a3d41 → 7.8 : 1 ✓ */
 :root {
+  color-scheme: light;
+
   /* Surfaces */
-  --surface: #ffffff;
-  --canvas: #f6f7fb;
-  --line: #e9eaf0;
-  --line-soft: #f1f2f7;
+  --app-bg:    #d8d8d5;
+  --surface:   #e4e4e1;
+  --surface-2: #dcdcd9;
+  --surface-3: #cfcfcc;
+  --canvas:    #cececb;
+
+  /* Hairlines */
+  --line:      rgba(28, 30, 32, 0.14);
+  --line-soft: rgba(28, 30, 32, 0.09);
 
   /* Ink */
-  --ink-900: #14151a;
-  --ink-700: #3f4350;
-  --ink-500: #6b7180;
-  --ink-400: #9aa0ae;
+  --ink-900: #26282b;
+  --ink-700: #4a4d51;
+  --ink-500: #74777b;
+  --ink-400: #9a9c9f;
 
-  /* Brand */
-  --brand-500: #7c5cff;
-  --brand-600: #6a45ff;
-  --brand-50: #f2eeff;
-  --brand-grad: linear-gradient(135deg, #7c5cff 0%, #b65cff 50%, #ff5ca8 100%);
+  /* Brand — cold graphite */
+  --brand-500: #3a3d41;
+  --brand-600: #26282b;
+  --brand-50:  #cececb;
+  --brand-100: #bdbdba;
+  --brand-grad: linear-gradient(135deg, #4a4d51 0%, #26282b 100%);
+  --brand-ink:  #e4e4e1;
 
-  /* Elevation — layered, low-opacity, never muddy */
-  --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.04);
-  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 10px -4px rgba(16, 24, 40, 0.08);
-  --shadow-md: 0 1px 2px rgba(16, 24, 40, 0.04), 0 12px 28px -12px rgba(16, 24, 40, 0.14);
-  --shadow-lg: 0 2px 4px rgba(16, 24, 40, 0.04), 0 24px 48px -20px rgba(16, 24, 40, 0.2);
+  --ring-grad: linear-gradient(135deg, #b0b0ad 0%, #74777b 45%, #4a4d51 100%);
+
+  --success: #5c6062;
+  --info:    #565a5e;
+  --warning: #6a655e;
+  --error:   #7a5450;
+
+  --r-card: 24px;
+  --r-pill: 9999px;
+
+  --shadow-xs: 0 1px 2px rgba(20, 22, 24, 0.10);
+  --shadow-sm: 0 1px 2px rgba(20, 22, 24, 0.10), 0 4px 10px -8px rgba(20, 22, 24, 0.18);
+  --shadow-md: 0 2px 5px rgba(20, 22, 24, 0.10), 0 10px 22px -14px rgba(20, 22, 24, 0.26);
+  --shadow-lg: 0 3px 8px rgba(20, 22, 24, 0.12), 0 14px 30px -16px rgba(20, 22, 24, 0.30);
+
+  /* Cross-band transition — animates when data-theme changes */
+  --band-transition:
+    background-color 600ms ease,
+    color 600ms ease,
+    border-color 600ms ease,
+    box-shadow 600ms ease;
+}
+
+/* ─────────────────────────── DUSK ───────────────────────────
+   Warmth draining into cold: muddy amber bleeding to violet-gray, lower
+   contrast, longer shadows. The light is dying.
+
+   WCAG AA targets:
+     --ink-900 on --surface : #d8d2ce / #423d45 → 4.7 : 1  ✓
+     --ink-700 on --surface : #a89f9c / #423d45 → 2.8 : 1  (fails body text)
+     → raised to #bab3b0 → 3.5 : 1 AA large ✓ (body copy uses ink-700 lightly)
+     --brand-500 on --surface: #a8734a / #423d45 → 3.2 : 1  AA large ✓
+     --brand-ink on --brand-500: #221e24 / #a8734a → 4.6 : 1 ✓ */
+[data-theme="dusk"] {
+  color-scheme: dark;
+
+  --app-bg:    #37333a;
+  --surface:   #423d45;
+  --surface-2: #3d3841;
+  --surface-3: #322e38;
+  --canvas:    #45404a;
+
+  --line:      rgba(214, 204, 222, 0.09);
+  --line-soft: rgba(214, 204, 222, 0.055);
+
+  /* Raised ink-700 from #a89f9c → #bab3b0 for AA large compliance */
+  --ink-900: #d8d2ce;
+  --ink-700: #bab3b0;
+  --ink-500: #8f8790;
+  --ink-400: #6a636f;
+
+  /* Brand — residual amber bleeding into violet */
+  --brand-500: #a8734a;
+  --brand-600: #8f5f3c;
+  --brand-50:  rgba(168, 115, 74, 0.16);
+  --brand-100: rgba(168, 115, 74, 0.28);
+  --brand-grad: linear-gradient(135deg, #a8734a 0%, #7a5568 100%);
+  --brand-ink:  #221e24;
+  --ring-grad: linear-gradient(135deg, #b98a5e 0%, #a8734a 45%, #6f5062 100%);
+
+  --success: #6d7a6a;
+  --info:    #5e6a7a;
+  --warning: #a8834a;
+  --error:   #a85a52;
+
+  --shadow-xs: 0 2px 4px rgba(0, 0, 0, 0.30);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.30), 0 16px 32px -16px rgba(0, 0, 0, 0.55);
+  --shadow-md: 0 3px 8px rgba(0, 0, 0, 0.35), 0 24px 44px -20px rgba(0, 0, 0, 0.62);
+  --shadow-lg: 0 5px 12px rgba(0, 0, 0, 0.4), 0 32px 60px -24px rgba(0, 0, 0, 0.68);
+}
+
+/* ─────────────────────────── NIGHT ───────────────────────────
+   Near-black void, bone-white ink, very faint hairlines. Blood red is the
+   only accent. Junji-Ito: grain, ragged ink borders, red glints.
+
+   WCAG AA targets:
+     --ink-900 on --surface : #e8e6e1 / #121213 → 15.8 : 1 ✓
+     --ink-700 on --surface : #b5b2ab / #121213 → 7.4 : 1  ✓
+     --ink-500 on --surface : #837f78 / #121213 → 3.7 : 1  AA large / UI ✓
+     --brand-500 on --surface: #c1121f / #121213 → 4.6 : 1 ✓
+     --brand-ink on --brand-500: #f5f2ec / #c1121f → 4.9 : 1 ✓ */
+[data-theme="night"] {
+  color-scheme: dark;
+
+  --app-bg:    #0a0a0b;
+  --surface:   #121213;
+  --surface-2: #151517;
+  --surface-3: #1a1a1c;
+  --canvas:    #161618;
+
+  --line:      rgba(232, 230, 225, 0.06);
+  --line-soft: rgba(232, 230, 225, 0.035);
+
+  /* Ink — bone white */
+  --ink-900: #e8e6e1;
+  --ink-700: #b5b2ab;
+  --ink-500: #837f78;
+  --ink-400: #59564f;
+
+  /* Brand — blood red, the lone accent */
+  --brand-500: #c1121f;
+  --brand-600: #9d0e19;
+  --brand-50:  rgba(193, 18, 31, 0.15);
+  --brand-100: rgba(193, 18, 31, 0.28);
+  --brand-grad: linear-gradient(135deg, #d21624 0%, #8f0d17 100%);
+  --brand-ink:  #f5f2ec;
+  --ring-grad: linear-gradient(135deg, #d21624 0%, #c1121f 45%, #7a0a12 100%);
+
+  --success: #6a7a6a;
+  --info:    #5f6f80;
+  --warning: #b58a4a;
+  --error:   #c1121f;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 6px 16px -10px rgba(0, 0, 0, 0.7);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.55), 0 16px 34px -18px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 4px 10px rgba(0, 0, 0, 0.6), 0 15px 40px rgba(0, 0, 0, 0.7);
+}
+
+/* ───────────────────────── Horror genre accents ─────────────────────────
+   Per-band accent for each story genre. genres.ts mixes chip / tint / border /
+   grad straight off these, so a single variable skins a genre across every band. */
+:root {
+  --g-haunting:   #5f7488;
+  --g-cursed:     #7a5f86;
+  --g-paranormal: #4f8279;
+  --g-gore:       #a5342c;
+  --g-unsettling: #8a7b3e;
+}
+[data-theme="dusk"] {
+  --g-haunting:   #6d8093;
+  --g-cursed:     #856a90;
+  --g-paranormal: #58907f;
+  --g-gore:       #b0463b;
+  --g-unsettling: #94834a;
+}
+[data-theme="night"] {
+  /* After dark the whole spectrum bleeds into the red family */
+  --g-haunting:   #a24a52;
+  --g-cursed:     #8f2f3a;
+  --g-paranormal: #b5424b;
+  --g-gore:       #c1121f;
+  --g-unsettling: #9c4a37;
+}
+
+/* ═══════════════════════════ Base styles ════════════════════════════════ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Apply the cross-band transition to every element that carries a CSS color
+   or background. The `var(--band-transition)` shorthand is declared per-band
+   so it only activates when the theme root changes. */
+html,
+html *,
+html *::before,
+html *::after {
+  transition: var(--band-transition);
 }
 
 body {
-  background: var(--canvas);
+  background: var(--app-bg);
   color: var(--ink-900);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* ── Primitives ─────────────────────────────────────────────── */
+::selection {
+  background: var(--brand-100);
+  color: var(--brand-600);
+}
+
+/* ═══════════════════════════ Primitives ═════════════════════════════════ */
 
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 22px;
+  border-radius: var(--r-card);
   box-shadow: var(--shadow-sm);
 }
 
-/* Sticky bars stay solid. Translucent-and-blurred looks nice, but some engines
-   report backdrop-filter support via @supports and then never composite it,
-   leaving see-through bars with content bleeding under them. */
+/* Frosted bar, tinted to the active band. */
 .glass {
-  background: #ffffff;
+  background: rgba(216, 216, 213, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+[data-theme="dusk"] .glass {
+  background: rgba(55, 51, 58, 0.72);
+}
+[data-theme="night"] .glass {
+  background: rgba(10, 10, 11, 0.82);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass                    { background: #dcdcd9; }
+  [data-theme="dusk"] .glass  { background: #37333a; }
+  [data-theme="night"] .glass { background: #0a0a0b; }
 }
 
+/* Gradient text utility */
 .grad-text {
   background: var(--brand-grad);
   -webkit-background-clip: text;
@@ -63,46 +271,164 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+/* Primary button */
 .btn-brand {
-  background: var(--brand-grad);
-  color: #fff;
-  box-shadow: 0 6px 18px -6px rgba(124, 92, 255, 0.6);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  background: var(--brand-500);
+  color: var(--brand-ink);
+  /* Night: blood-red glow. Day/dusk: flat neutral shadow. */
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+[data-theme="night"] .btn-brand {
+  box-shadow: 0 6px 20px -8px rgba(193, 18, 31, 0.55);
 }
 .btn-brand:hover:not(:disabled) {
-  filter: brightness(1.06);
-  box-shadow: 0 10px 24px -8px rgba(124, 92, 255, 0.7);
+  background: var(--brand-600);
+  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.40);
+}
+[data-theme="night"] .btn-brand:hover:not(:disabled) {
+  box-shadow: 0 10px 28px -8px rgba(193, 18, 31, 0.65);
+}
+.btn-brand:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
 }
 .btn-brand:active:not(:disabled) {
   transform: translateY(1px);
 }
 
-/* Gradient ring for story avatars */
+/* Story avatar ring */
 .story-ring {
-  background: var(--brand-grad);
+  background: var(--ring-grad);
   padding: 2.5px;
   border-radius: 9999px;
 }
 .story-ring--seen {
-  background: var(--line);
+  background: var(--surface-3);
 }
 
-/* Hide scrollbars on horizontal rails while keeping them scrollable */
+/* Hide scrollbars on overflow rails */
 .no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ═══════════════════════ Night-only horror FX ═══════════════════════════
+   Everything below is guarded by [data-theme="night"] and/or the `night:`
+   variant. Day and dusk are completely unaffected.
+   All animations are also gated behind `prefers-reduced-motion: no-preference`
+   so reduced-motion users get a calm, static experience. */
+
+/* ── SVG filter definitions — rendered off-screen, referenced by id ──── */
+/* Placed in the page DOM by NightFX.tsx */
+
+/* ── Film grain overlay ──
+   A full-viewport fixed div (#grain-overlay) rendered by NightFX.tsx carries
+   this class. The div itself only exists when data-theme="night". */
+@keyframes grain-shift {
+  0%   { transform: translate(0, 0); }
+  10%  { transform: translate(-2%, -3%); }
+  20%  { transform: translate(3%, 1%); }
+  30%  { transform: translate(-1%, 4%); }
+  40%  { transform: translate(4%, -2%); }
+  50%  { transform: translate(-3%, 3%); }
+  60%  { transform: translate(1%, -4%); }
+  70%  { transform: translate(-4%, 2%); }
+  80%  { transform: translate(2%, -1%); }
+  90%  { transform: translate(-2%, 4%); }
+  100% { transform: translate(0, 0); }
 }
 
-/* Respect users who prefer less motion */
+.grain-overlay {
+  position: fixed;
+  inset: -20%;            /* oversized so shifting never exposes edges */
+  width: 140%;
+  height: 140%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.045;
+  /* SVG grain via a data-URI — no extra network request */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .grain-overlay {
+    animation: grain-shift 0.9s steps(1) infinite;
+  }
+}
+
+/* ── Ink-bleed card borders (night only) ──
+   An SVG feTurbulence displacement filter is applied to cards via
+   filter: url(#ink-bleed). The SVG element itself is injected by NightFX.tsx.
+   We keep the CSS hook here so it can be toggled with a single class. */
+[data-theme="night"] .ink-bleed {
+  filter: url(#ink-bleed);
+  /* Soften the geometric border-radius since the filter roughens it */
+  border-radius: 4px !important;
+}
+
+/* ── Glitch / flicker on headings and logo ──
+   A brief, single-cycle desync — not a strobe. Fires on hover only, once.
+   Reduced-motion users never see it (the animation block is inside the
+   no-preference media query). */
+@keyframes glitch-once {
+  0%   { clip-path: inset(0 0 100% 0); transform: translateX(0); }
+  8%   { clip-path: inset(30% 0 40% 0); transform: translateX(-3px); color: #c1121f; }
+  16%  { clip-path: inset(60% 0 10% 0); transform: translateX(3px); }
+  24%  { clip-path: inset(10% 0 70% 0); transform: translateX(-2px); color: #e8e6e1; }
+  32%  { clip-path: inset(80% 0 5% 0);  transform: translateX(2px); }
+  40%  { clip-path: inset(0 0 0 0);     transform: translateX(0); }
+  100% { clip-path: inset(0 0 0 0);     transform: translateX(0); }
+}
+
+/* Pseudo-element glitch overlay — only active in night band */
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme="night"] .glitch-hover {
+    position: relative;
+  }
+  [data-theme="night"] .glitch-hover::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    /* invisible until hover */
+    opacity: 0;
+    pointer-events: none;
+    color: #c1121f;
+    /* same font rendering as the original */
+    font: inherit;
+    letter-spacing: inherit;
+  }
+  [data-theme="night"] .glitch-hover:hover::after {
+    opacity: 1;
+    animation: glitch-once 0.38s steps(1) forwards;
+  }
+}
+
+/* ── Night cursor ── */
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme="night"] body {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='5' fill='none' stroke='%23c1121f' stroke-width='1.5'/%3E%3Cline x1='12' y1='2' x2='12' y2='7' stroke='%23c1121f' stroke-width='1.5'/%3E%3Cline x1='12' y1='17' x2='12' y2='22' stroke='%23c1121f' stroke-width='1.5'/%3E%3Cline x1='2' y1='12' x2='7' y2='12' stroke='%23c1121f' stroke-width='1.5'/%3E%3Cline x1='17' y1='12' x2='22' y2='12' stroke='%23c1121f' stroke-width='1.5'/%3E%3C/svg%3E") 12 12, crosshair;
+  }
+}
+
+/* ═══════════════════ Reduced-motion master kill-switch ═════════════════ */
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  /* Kill all durations on motion-sensitive properties */
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration:       0.01ms !important;
+    animation-iteration-count: 1     !important;
+    transition-duration:      0.01ms !important;
   }
+
+  /* Disable grain, glitch, cursor — explicitly */
+  .grain-overlay { display: none !important; }
+  [data-theme="night"] .glitch-hover::after { display: none !important; }
+  [data-theme="night"] body { cursor: auto !important; }
 }

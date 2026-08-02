@@ -6,26 +6,25 @@ import { motion } from "motion/react";
 import { Flame, TrendingUp, Hash } from "lucide-react";
 import PostCard from "@/component/PostCard";
 import RightSidebar from "@/component/RightSidebar";
-import AnimatedEmoji from "@/component/AnimatedEmoji";
-import { moods } from "@/lib/moods";
+import { genres } from "@/lib/genres";
 import { feed } from "@/lib/mockData";
 
 const hashtags = [
-  { tag: "#HappyMood",    posts: "12.5K", change: "+24%", hot: true },
-  { tag: "#LoveToday",    posts: "8.9K",  change: "+11%", hot: false },
-  { tag: "#Excited",      posts: "6.2K",  change: "+38%", hot: true },
-  { tag: "#MorningFeels", posts: "3.1K",  change: "+52%", hot: true },
-  { tag: "#LateNight",    posts: "2.7K",  change: "+9%",  hot: false },
-  { tag: "#CoolVibes",    posts: "4.7K",  change: "+6%",  hot: false },
+  { tag: "#HauntedHouses",  posts: "12.5K", change: "+24%", hot: true  },
+  { tag: "#CursedObjects",  posts: "8.9K",  change: "+11%", hot: false },
+  { tag: "#TrueParanormal", posts: "6.2K",  change: "+38%", hot: true  },
+  { tag: "#3AMStories",     posts: "3.1K",  change: "+52%", hot: true  },
+  { tag: "#DeepWoods",      posts: "2.7K",  change: "+9%",  hot: false },
+  { tag: "#SlenderSightings", posts: "4.7K", change: "+6%", hot: false },
 ];
 
-const moodPulse = moods.map((m, i) => ({
-  ...m,
+const genrePulse = genres.map((g, i) => ({
+  ...g,
   posts: `${(28 - i * 2).toFixed(1)}K`,
   pct: 92 - i * 8,
 }));
 
-const filters = ["Top", "Latest", "Moods", "Tags"] as const;
+const filters = ["Top", "Latest", "Genres", "Tags"] as const;
 
 export default function TrendingPage() {
   const [filter, setFilter] = useState<(typeof filters)[number]>("Top");
@@ -38,7 +37,7 @@ export default function TrendingPage() {
           <div className="max-w-2xl mx-auto px-4 pt-4">
             <div className="flex items-center gap-2">
               <div className="flex items-center justify-center w-8 h-8 rounded-[10px]" style={{ background: "var(--brand-grad)" }}>
-                <Flame className="w-[18px] h-[18px] text-white" />
+                <Flame className="w-[18px] h-[18px] text-[var(--brand-ink)]" />
               </div>
               <h1 className="text-[22px] font-bold tracking-tight text-[var(--ink-900)]">Trending</h1>
             </div>
@@ -81,7 +80,7 @@ export default function TrendingPage() {
                   <Link
                     key={h.tag}
                     href={`/search?q=${encodeURIComponent(h.tag)}`}
-                    className="flex items-center justify-between px-4 py-3 rounded-[16px] bg-white border border-[var(--line)] hover:shadow-[var(--shadow-md)] transition-shadow"
+                    className="flex items-center justify-between px-4 py-3 rounded-[16px] bg-[var(--surface)] border border-[var(--line)] hover:shadow-[var(--shadow-md)] transition-shadow"
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-[12px] font-bold text-[var(--ink-400)] w-4">{i + 1}</span>
@@ -94,7 +93,7 @@ export default function TrendingPage() {
                             </span>
                           )}
                         </div>
-                        <span className="text-[12px] text-[var(--ink-400)]">{h.posts} posts</span>
+                        <span className="text-[12px] text-[var(--ink-400)]">{h.posts} tales</span>
                       </div>
                     </div>
                     <span className="text-[12.5px] font-semibold text-emerald-600">{h.change}</span>
@@ -104,43 +103,51 @@ export default function TrendingPage() {
             </section>
           )}
 
-          {/* Mood pulse bars */}
-          {(filter === "Top" || filter === "Moods") && (
+          {/* Genre pulse bars */}
+          {(filter === "Top" || filter === "Genres") && (
             <section>
               <div className="flex items-center gap-1.5 mb-3">
                 <TrendingUp className="w-4 h-4 text-[var(--brand-600)]" />
-                <h2 className="text-[14px] font-bold text-[var(--ink-900)]">Mood pulse</h2>
+                <h2 className="text-[14px] font-bold text-[var(--ink-900)]">Genre pulse</h2>
               </div>
-              <div className="p-4 rounded-[18px] bg-white border border-[var(--line)] space-y-3">
-                {moodPulse.map((m, i) => (
-                  <Link key={m.label} href={`/search?q=${encodeURIComponent(m.label)}`} className="flex items-center gap-3 group">
-                    <div className="flex items-center gap-2 w-28 shrink-0">
-                      <AnimatedEmoji src={m.lottie} size={20} label={m.label} />
-                      <span className="text-[13px] font-semibold text-[var(--ink-700)]">{m.label}</span>
-                    </div>
-                    <div className="flex-1 h-2.5 rounded-full bg-[var(--canvas)] overflow-hidden">
-                      <motion.span
-                        className="block h-full rounded-full"
-                        style={{ background: m.grad }}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${m.pct}%` }}
-                        transition={{ delay: i * 0.06, duration: 0.6, ease: "easeOut" }}
-                      />
-                    </div>
-                    <span className="text-[12px] text-[var(--ink-400)] w-12 text-right tabular-nums">{m.posts}</span>
-                  </Link>
-                ))}
+              <div className="p-4 rounded-[18px] bg-[var(--surface)] border border-[var(--line)] space-y-3">
+                {genrePulse.map((g, i) => {
+                  const Icon = g.Icon;
+                  return (
+                    <Link key={g.label} href={`/search?q=${encodeURIComponent(g.label)}`} className="flex items-center gap-3 group">
+                      <div className="flex items-center gap-2 w-32 shrink-0">
+                        <span
+                          className="flex items-center justify-center w-6 h-6 rounded-full shrink-0"
+                          style={{ background: g.chip, color: g.accent }}
+                        >
+                          <Icon className="w-3.5 h-3.5" strokeWidth={2.2} />
+                        </span>
+                        <span className="text-[13px] font-semibold text-[var(--ink-700)]">{g.label}</span>
+                      </div>
+                      <div className="flex-1 h-2.5 rounded-full bg-[var(--canvas)] overflow-hidden">
+                        <motion.span
+                          className="block h-full rounded-full"
+                          style={{ background: g.grad }}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${g.pct}%` }}
+                          transition={{ delay: i * 0.06, duration: 0.6, ease: "easeOut" }}
+                        />
+                      </div>
+                      <span className="text-[12px] text-[var(--ink-400)] w-12 text-right tabular-nums">{g.posts}</span>
+                    </Link>
+                  );
+                })}
               </div>
             </section>
           )}
 
-          {/* Hot posts */}
-          {filter !== "Tags" && filter !== "Moods" && (
+          {/* Hot tales */}
+          {filter !== "Tags" && filter !== "Genres" && (
             <section>
               <div className="flex items-center gap-1.5 mb-3">
                 <Flame className="w-4 h-4 text-orange-500" />
                 <h2 className="text-[14px] font-bold text-[var(--ink-900)]">
-                  {filter === "Latest" ? "Fresh posts" : "Hot right now"}
+                  {filter === "Latest" ? "Freshly told" : "Burning right now"}
                 </h2>
               </div>
               <div className="space-y-5">

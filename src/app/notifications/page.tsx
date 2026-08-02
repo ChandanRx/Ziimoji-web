@@ -5,8 +5,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { Heart, MessageCircle, UserPlus, AtSign, Repeat2, Bell, type LucideIcon } from "lucide-react";
 import RightSidebar from "@/component/RightSidebar";
-import AnimatedEmoji from "@/component/AnimatedEmoji";
-import { getMood } from "@/lib/moods";
+import { getGenre } from "@/lib/genres";
 import { people } from "@/lib/mockData";
 
 type NotifType = "like" | "comment" | "follow" | "mention" | "repost";
@@ -17,7 +16,7 @@ interface Notif {
   personId: string;
   text: string;
   time: string;
-  mood?: string;
+  genre?: string;
   postId?: string;
   unread: boolean;
 }
@@ -31,14 +30,14 @@ const meta: Record<NotifType, { Icon: LucideIcon; color: string; bg: string }> =
 };
 
 const notifs: Notif[] = [
-  { id: "n1", type: "like",    personId: "user1", text: "liked your post", time: "2m",  mood: "Happy",   postId: "1", unread: true },
+  { id: "n1", type: "like",    personId: "user1", text: "liked your tale", time: "2m",  genre: "Haunting",   postId: "1", unread: true },
   { id: "n2", type: "follow",  personId: "user2", text: "started following you", time: "14m", unread: true },
-  { id: "n3", type: "comment", personId: "user6", text: "commented: \"this is such a vibe 😂\"", time: "38m", mood: "Happy", postId: "1", unread: true },
-  { id: "n4", type: "mention", personId: "user3", text: "mentioned you in a post", time: "1h", mood: "Sad", postId: "2", unread: false },
-  { id: "n5", type: "repost",  personId: "user7", text: "reposted your mood", time: "2h", mood: "Excited", postId: "2", unread: false },
-  { id: "n6", type: "like",    personId: "user4", text: "and 24 others liked your post", time: "3h", mood: "Bored", postId: "1", unread: false },
+  { id: "n3", type: "comment", personId: "user6", text: "commented: \"this gave me chills 🕯️\"", time: "38m", genre: "Haunting", postId: "1", unread: true },
+  { id: "n4", type: "mention", personId: "user3", text: "mentioned you in a tale", time: "1h", genre: "Paranormal", postId: "2", unread: false },
+  { id: "n5", type: "repost",  personId: "user7", text: "reblogged your story", time: "2h", genre: "Gore", postId: "2", unread: false },
+  { id: "n6", type: "like",    personId: "user4", text: "and 24 others liked your tale", time: "3h", genre: "Cursed", postId: "1", unread: false },
   { id: "n7", type: "follow",  personId: "user9", text: "started following you", time: "5h", unread: false },
-  { id: "n8", type: "comment", personId: "user5", text: "commented: \"needed this today 🫧\"", time: "8h", mood: "Angry", postId: "2", unread: false },
+  { id: "n8", type: "comment", personId: "user5", text: "commented: \"I had to read this with the lights on 💀\"", time: "8h", genre: "Unsettling", postId: "2", unread: false },
 ];
 
 const filters = ["All", "Mentions", "Follows"] as const;
@@ -65,7 +64,7 @@ export default function NotificationsPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="flex items-center justify-center w-8 h-8 rounded-[10px]" style={{ background: "var(--brand-grad)" }}>
-                  <Bell className="w-[17px] h-[17px] text-white" />
+                  <Bell className="w-[17px] h-[17px] text-[var(--brand-ink)]" />
                 </div>
                 <h1 className="text-[22px] font-bold tracking-tight text-[var(--ink-900)]">Notifications</h1>
               </div>
@@ -110,7 +109,8 @@ export default function NotificationsPage() {
               {filtered.map((n, index) => {
                 const person = personOf(n.personId);
                 const { Icon, color, bg } = meta[n.type];
-                const mood = n.mood ? getMood(n.mood) : null;
+                const genre = n.genre ? getGenre(n.genre) : null;
+                const GenreIcon = genre?.Icon ?? null;
                 const href = n.type === "follow" ? `/profile/${person.id}` : `/post/${n.postId ?? "1"}`;
                 return (
                   <motion.div
@@ -143,12 +143,16 @@ export default function NotificationsPage() {
                         <span className="text-[12px] text-[var(--ink-400)]">{n.time} ago</span>
                       </div>
 
-                      {mood ? (
-                        <span className="shrink-0">
-                          <AnimatedEmoji src={mood.lottie} size={24} label={mood.label} />
+                      {genre && GenreIcon ? (
+                        <span
+                          className="shrink-0 flex items-center justify-center w-8 h-8 rounded-full"
+                          style={{ background: genre.chip, color: genre.accent }}
+                          title={genre.label}
+                        >
+                          <GenreIcon className="w-4 h-4" strokeWidth={2.2} />
                         </span>
                       ) : n.type === "follow" ? (
-                        <span className="shrink-0 px-3.5 py-1.5 rounded-full text-[12px] font-semibold btn-brand text-white">
+                        <span className="shrink-0 px-3.5 py-1.5 rounded-full text-[12px] font-semibold btn-brand">
                           Follow
                         </span>
                       ) : null}
