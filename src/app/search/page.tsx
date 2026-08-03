@@ -4,26 +4,27 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X, TrendingUp, ArrowUpRight } from "lucide-react";
 import RightSidebar from "@/component/RightSidebar";
-import { genres } from "@/lib/genres";
+import { moods } from "@/lib/moods";
+import AnimatedEmoji from "@/component/AnimatedEmoji";
 
 const counts: Record<string, string> = {
-  Haunting: "12.5k", Cursed: "8.2k", Paranormal: "15.7k", Gore: "5.1k", Unsettling: "6.9k",
+  Happy: "12.5k", Sad: "8.2k", Excited: "15.7k", Angry: "5.1k", Bored: "6.9k",
 };
 
-const genreSuggestions = genres.map((g) => ({ ...g, count: counts[g.label] ?? "1k" }));
+const moodSuggestions = moods.map((m) => ({ ...m, count: counts[m.label] ?? "1k" }));
 
 const trendingTopics = [
-  { topic: "#HauntedHouses",   posts: "12.5K tales", trending: true,  change: "+24%" },
-  { topic: "#CursedObjects",   posts: "8.9K tales",  trending: false, change: "+11%" },
-  { topic: "#TrueParanormal",  posts: "6.2K tales",  trending: true,  change: "+38%" },
-  { topic: "#ShadowPeople",    posts: "4.7K tales",  trending: false, change: "+6%"  },
-  { topic: "#3AMStories",      posts: "3.1K tales",  trending: true,  change: "+52%" },
+  { topic: "#HappyMood",    posts: "12.5K posts", trending: true,  change: "+24%" },
+  { topic: "#LoveToday",    posts: "8.9K posts",  trending: false, change: "+11%" },
+  { topic: "#Excited",      posts: "6.2K posts",  trending: true,  change: "+38%" },
+  { topic: "#CoolVibes",    posts: "4.7K posts",  trending: false, change: "+6%"  },
+  { topic: "#MorningFeels", posts: "3.1K posts",  trending: true,  change: "+52%" },
 ];
 
 const SectionLabel = ({ label, sub }: { label: string; sub?: string }) => (
   <div className="flex items-center justify-between mb-3">
-    <h2 className="text-[13px] font-semibold text-[var(--ink-700)]">{label}</h2>
-    {sub && <span className="text-xs text-[var(--ink-400)]">{sub}</span>}
+    <h2 className="text-[13px] font-semibold text-slate-700">{label}</h2>
+    {sub && <span className="text-xs text-slate-400">{sub}</span>}
   </div>
 );
 
@@ -55,22 +56,22 @@ const SearchContent = () => {
         <div className="max-w-2xl mx-auto px-6 py-8">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-[var(--ink-900)] leading-tight">Discover Tales</h1>
-            <p className="text-sm text-[var(--ink-500)] mt-1">
-              Search genres, tellers &amp; trending stories
+            <h1 className="text-2xl font-bold text-slate-900 leading-tight">Discover Moods</h1>
+            <p className="text-sm text-slate-500 mt-1">
+              Search emotions, vibes &amp; trending topics
             </p>
           </div>
 
           {/* Search bar */}
-          <div className="sticky top-2 z-20 mb-8 flex items-center gap-3 bg-[var(--surface)] rounded-[16px] px-4 py-3 border border-[var(--line)] shadow-[var(--shadow-sm)] focus-within:shadow-[var(--shadow-md)] transition-shadow">
-            <Search className="shrink-0 w-4 h-4 text-[var(--ink-400)]" />
+          <div className="sticky top-2 z-20 mb-8 flex items-center gap-3 bg-white rounded-sm px-4 py-3 border border-[var(--line)] shadow-[var(--shadow-sm)] focus-within:shadow-[var(--shadow-md)] transition-shadow">
+            <Search className="shrink-0 w-4 h-4 text-slate-400" />
             <input
               type="text"
-              placeholder="Search genres, authors, keywords…"
+              placeholder="Search moods, emojis, keywords…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch(searchQuery)}
-              className="flex-1 bg-transparent text-sm text-[var(--ink-900)] placeholder-[var(--ink-400)] focus:outline-none"
+              className="flex-1 bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
             />
             {searchQuery && (
               <button
@@ -84,51 +85,48 @@ const SearchContent = () => {
 
           {searchQuery ? (
             <div className="flex flex-col items-center py-20 gap-4">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-[var(--brand-50)]">
-                <Search className="w-6 h-6 text-[var(--brand-600)]" />
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-violet-50">
+                <Search className="w-6 h-6 text-violet-500" />
               </div>
               <div className="text-center">
-                <p className="text-sm font-semibold text-[var(--ink-600)]">
-                  No tales found for <span className="text-[var(--ink-900)]">&ldquo;{searchQuery}&rdquo;</span>
+                <p className="text-sm font-semibold text-slate-600">
+                  No results for <span className="text-slate-900">&ldquo;{searchQuery}&rdquo;</span>
                 </p>
-                <p className="text-xs text-[var(--ink-400)] mt-1">Try a different genre or keyword</p>
+                <p className="text-xs text-slate-400 mt-1">Try a different mood or keyword</p>
               </div>
             </div>
           ) : (
             <div className="space-y-8">
               {/* Quick search */}
               <section>
-                <SectionLabel label="Browse by Genre" sub={`${genreSuggestions.length} genres`} />
+                <SectionLabel label="Quick Search" sub={`${moodSuggestions.length} moods`} />
                 <div className="grid grid-cols-2 gap-3">
-                  {genreSuggestions.map((g) => {
-                    const Icon = g.Icon;
-                    return (
-                      <button
-                        key={g.label}
-                        onClick={() => handleSuggestionClick(g.label)}
-                        className="flex items-center gap-3 px-4 py-3 rounded-[16px] text-left w-full group bg-[var(--surface)] border border-[var(--line)] hover:shadow-[var(--shadow-md)] transition-shadow"
+                  {moodSuggestions.map((mood) => (
+                    <button
+                      key={mood.label}
+                      onClick={() => handleSuggestionClick(mood.label)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-sm text-left w-full group bg-white border border-[var(--line)] hover:shadow-[var(--shadow-md)] transition-shadow"
+                    >
+                      <div
+                        className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
+                        style={{ background: mood.chip }}
                       >
-                        <div
-                          className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
-                          style={{ background: g.chip, color: g.accent }}
-                        >
-                          <Icon className="w-5 h-5" strokeWidth={2.2} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[13.5px] font-semibold text-[var(--ink-900)] leading-tight truncate">
-                            {g.label}
-                          </p>
-                          <p className="text-[11.5px] text-[var(--ink-400)] mt-0.5 truncate">
-                            {g.count} tales
-                          </p>
-                        </div>
-                        <ArrowUpRight
-                          className="shrink-0 w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"
-                          style={{ color: g.accent }}
-                        />
-                      </button>
-                    );
-                  })}
+                        <AnimatedEmoji src={mood.lottie} size={24} label={mood.label} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13.5px] font-semibold text-[var(--ink-900)] leading-tight truncate">
+                          {mood.label}
+                        </p>
+                        <p className="text-[11.5px] text-[var(--ink-400)] mt-0.5 truncate">
+                          {mood.count} posts
+                        </p>
+                      </div>
+                      <ArrowUpRight
+                        className="shrink-0 w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{ color: mood.accent }}
+                      />
+                    </button>
+                  ))}
                 </div>
               </section>
 
@@ -140,15 +138,15 @@ const SearchContent = () => {
                     <button
                       key={topic.topic}
                       onClick={() => handleSuggestionClick(topic.topic)}
-                      className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-left bg-[var(--surface)] border border-[var(--line)] hover:border-[var(--brand-100)] hover:shadow-[var(--shadow-sm)] transition-all"
+                      className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-left bg-white border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-xs font-semibold w-5 text-center text-[var(--ink-400)]">
+                        <span className="text-xs font-semibold w-5 text-center text-slate-400">
                           {i + 1}
                         </span>
                         <div>
-                          <p className="text-sm font-semibold text-[var(--ink-900)]">{topic.topic}</p>
-                          <p className="text-xs text-[var(--ink-400)] mt-0.5">{topic.posts}</p>
+                          <p className="text-sm font-semibold text-slate-700">{topic.topic}</p>
+                          <p className="text-xs text-slate-400 mt-0.5">{topic.posts}</p>
                         </div>
                       </div>
 
@@ -166,14 +164,14 @@ const SearchContent = () => {
               </section>
 
               {/* Live ticker */}
-              <div className="flex items-center justify-between px-4 py-3.5 rounded-xl bg-[var(--surface)] border border-[var(--line)]">
+              <div className="flex items-center justify-between px-4 py-3.5 rounded-xl bg-white border border-slate-200">
                 <div className="flex items-center gap-2.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span className="text-sm text-[var(--ink-500)]">Tellers active now</span>
+                  <span className="text-sm text-slate-500">Active right now</span>
                 </div>
-                <span className="text-sm font-semibold text-[var(--ink-900)] tabular-nums">
+                <span className="text-sm font-semibold text-slate-700 tabular-nums">
                   4,821
-                  <span className="text-xs font-normal text-[var(--ink-400)] ml-1">tellers</span>
+                  <span className="text-xs font-normal text-slate-400 ml-1">users</span>
                 </span>
               </div>
             </div>

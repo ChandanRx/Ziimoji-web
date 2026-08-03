@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 import PostCard from "@/component/PostCard";
 import RightSidebar from "@/component/RightSidebar";
-import { getGenre } from "@/lib/genres";
+import AnimatedEmoji from "@/component/AnimatedEmoji";
+import { getMood } from "@/lib/moods";
 import { getPerson, currentUser, buildPosts } from "@/lib/mockData";
 
 const formatCount = (n: number): string =>
@@ -25,8 +26,7 @@ const tabs = [
 export default function ProfilePage() {
   const params = useParams<{ id: string }>();
   const person = getPerson(params.id);
-  const genre = getGenre(person.genre);
-  const GenreIcon = genre.Icon;
+  const mood = getMood(person.mood);
   const isSelf = person.id === currentUser.id;
 
   const [following, setFollowing] = useState(person.isFollowing ?? false);
@@ -71,7 +71,7 @@ export default function ProfilePage() {
 
         <div className="max-w-2xl mx-auto">
           {/* Cover */}
-          <div className="relative h-40 sm:h-52" style={{ background: genre.grad }}>
+          <div className="relative h-40 sm:h-52" style={{ background: mood.grad }}>
             <span
               aria-hidden
               className="absolute inset-0 opacity-30"
@@ -80,14 +80,14 @@ export default function ProfilePage() {
           </div>
 
           <div className="px-4 sm:px-6">
-            {/* Avatar + actions row */}
-            <div className="flex items-end justify-between -mt-14 sm:-mt-16">
+            {/* Avatar + actions row — lifted above the cover so it isn't clipped */}
+            <div className="relative z-10 flex items-end justify-between -mt-14 sm:-mt-16">
               <motion.span
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 22 }}
                 className="block rounded-full p-[4px] ring-4 ring-white"
-                style={{ background: genre.grad }}
+                style={{ background: mood.grad }}
               >
                 <img
                   src={person.avatar}
@@ -115,7 +115,7 @@ export default function ProfilePage() {
                       className={`px-5 py-2 rounded-full text-[13px] font-semibold transition-colors ${
                         following
                           ? "border border-[var(--line)] text-[var(--ink-700)] hover:border-rose-300 hover:text-rose-600"
-                          : "btn-brand"
+                          : "btn-brand text-white"
                       }`}
                     >
                       {following ? "Following" : "Follow"}
@@ -134,10 +134,10 @@ export default function ProfilePage() {
                 )}
                 <span
                   className="ml-1 flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold"
-                  style={{ background: genre.chip, color: genre.accent }}
+                  style={{ background: mood.chip, color: mood.accent }}
                 >
-                  <GenreIcon className="w-3.5 h-3.5" strokeWidth={2.2} />
-                  {genre.label}
+                  <AnimatedEmoji src={mood.lottie} size={14} label={mood.label} />
+                  {mood.label}
                 </span>
               </div>
               <p className="text-[13.5px] text-[var(--ink-400)]">@{person.username}</p>
@@ -154,7 +154,7 @@ export default function ProfilePage() {
             <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] text-[var(--ink-400)]">
               <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Bengaluru, India</span>
               <a href="#" className="flex items-center gap-1.5 text-[var(--brand-600)] hover:underline">
-                <LinkIcon className="w-3.5 h-3.5" /> grimoire.app
+                <LinkIcon className="w-3.5 h-3.5" /> zymoji.app
               </a>
               <span className="flex items-center gap-1.5"><CalendarDays className="w-3.5 h-3.5" /> Joined Mar 2024</span>
             </div>
@@ -206,8 +206,8 @@ export default function ProfilePage() {
           <div className="px-4 py-5">
             {activeTab === "likes" ? (
               <div className="flex flex-col items-center gap-2 py-16 text-center">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full" style={{ background: genre.chip }}>
-                  <Heart className="w-5 h-5" style={{ color: genre.accent }} />
+                <div className="flex items-center justify-center w-12 h-12 rounded-full" style={{ background: mood.chip }}>
+                  <Heart className="w-5 h-5" style={{ color: mood.accent }} />
                 </div>
                 <p className="text-[14px] font-semibold text-[var(--ink-700)]">Likes are private</p>
                 <p className="text-[12.5px] text-[var(--ink-400)]">Only {isSelf ? "you" : person.name} can see this.</p>

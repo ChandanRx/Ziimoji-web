@@ -76,7 +76,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                 <div className="flex items-center gap-2 mb-3">
                   <Search className="w-4 h-4 text-slate-400" />
                   <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                    Search Zi!moji
+                    Search Zimoji
                   </span>
                   <div className="flex-1" />
                   <button

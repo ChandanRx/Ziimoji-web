@@ -5,10 +5,9 @@ import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import {
   Home, Search, Users, MessageCircle, Flame,
-  Bookmark, Bell, User,
+  Bookmark, Bell, User, Plus,
 } from "lucide-react";
-import { GrimoireLogo } from "./GrimoireLogo";
-import ThemeToggle from "./ThemeToggle";
+import Logo from "@/component/Logo";
 
 const user = { id: "123", name: "Chandan", handle: "@chandan_user" };
 
@@ -33,99 +32,108 @@ const Navbar = () => {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  // Auth screens are chrome-free — no app nav.
+  if (pathname === "/signin" || pathname === "/signup") return null;
+
   return (
     <>
-      {/* ─────────── Desktop rail (flat, no container) ─────────── */}
-      <aside className="hidden md:flex flex-col w-[280px] h-screen fixed left-0 top-0 z-50 px-4 pt-7 pb-4 border-r border-[var(--line)]">
-        <div className="px-2.5 mb-8">
-          <GrimoireLogo />
+      {/* ─────────── Desktop sidebar ─────────── */}
+      <aside className="hidden md:flex flex-col w-[264px] h-screen fixed z-50 bg-white border-r border-[var(--line)] px-4 pt-6 pb-5">
+        <div className="px-2 mb-7">
+          <Logo />
         </div>
 
-        <nav className="flex flex-col gap-1 flex-1">
+        <nav className="flex flex-col gap-0.5 flex-1">
           {links.map(({ href, Icon, label }) => {
             const active = isActive(href);
             return (
               <Link
                 key={href}
                 href={href}
-                className="relative flex items-center gap-3.5 px-2.5 h-[52px] text-[15px] transition-colors group"
-                style={{ color: active ? "var(--ink-900)" : "var(--ink-500)" }}
+                className="relative flex items-center gap-3.5 px-3.5 py-2.5 rounded-sm text-[14px] font-medium transition-colors group"
+                style={{ color: active ? "var(--brand-600)" : "var(--ink-500)" }}
               >
-                <span className="relative flex items-center justify-center w-6 h-6 shrink-0">
+                {/* Animated active pill — slides between items */}
+                {active && (
+                  <motion.span
+                    layoutId="nav-active"
+                    className="absolute inset-0 rounded-sm"
+                    style={{ background: "var(--brand-50)" }}
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                )}
+
+                <span className="relative flex items-center justify-center w-5 h-5 shrink-0">
                   <Icon
-                    className="w-[23px] h-[23px] transition-colors"
-                    style={{ color: active ? "var(--brand-500)" : "inherit" }}
-                    strokeWidth={active ? 2.3 : 2}
+                    className={`w-[19px] h-[19px] transition-colors ${
+                      active ? "" : "text-[var(--ink-400)] group-hover:text-[var(--ink-700)]"
+                    }`}
+                    strokeWidth={active ? 2.4 : 2}
                   />
                   {href === "/notifications" && notificationCount > 0 && (
-                    <span className="absolute -top-1.5 -right-2 flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-[var(--brand-500)] text-[var(--brand-ink)] text-[9px] font-bold ring-2 ring-[var(--app-bg)]">
+                    <span className="absolute -top-1.5 -right-2 flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold ring-2 ring-white">
                       {notificationCount > 9 ? "9+" : notificationCount}
                     </span>
                   )}
                 </span>
 
-                {/* Label with an animated active underline */}
                 <span
                   className={`relative transition-colors ${
-                    active ? "font-semibold" : "font-medium group-hover:text-[var(--ink-900)]"
+                    active ? "font-semibold" : "group-hover:text-[var(--ink-700)]"
                   }`}
                 >
                   {label}
-                  {active && (
-                    <motion.span
-                      layoutId="nav-active"
-                      className="absolute -bottom-1.5 left-0 h-[3px] w-full rounded-full"
-                      style={{ background: "var(--brand-500)" }}
-                      transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                    />
-                  )}
                 </span>
               </Link>
             );
           })}
 
+          {/* Primary CTA */}
+          <Link
+            href="/?compose=1"
+            className="btn-brand mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-sm text-[14px] font-semibold"
+          >
+            <Plus className="w-4 h-4" strokeWidth={2.6} />
+            Create post
+          </Link>
         </nav>
 
-        {/* User row + theme toggle */}
-        <div className="mt-3 flex items-center gap-2">
-          <Link
-            href={`/profile/${user.id}`}
-            className="flex flex-1 min-w-0 items-center gap-3 p-2.5 rounded-[18px] hover:bg-[var(--canvas)] transition-colors"
-          >
-            <div className="relative shrink-0">
-              <img
-                src="https://i.pravatar.cc/120?img=12"
-                alt=""
-                width={42}
-                height={42}
-                className="rounded-full object-cover"
-              />
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[var(--success)] ring-2 ring-[var(--app-bg)]" />
-            </div>
-            <div className="flex flex-col min-w-0 leading-tight">
-              <span className="text-[14px] font-semibold text-[var(--ink-900)] truncate">
-                {user.name}
-              </span>
-              <span className="text-[12px] text-[var(--ink-500)] truncate">{user.handle}</span>
-            </div>
-          </Link>
-          <ThemeToggle />
-        </div>
+        {/* User card */}
+        <Link
+          href={`/profile/${user.id}`}
+          className="flex items-center gap-3 p-2.5 rounded-sm border border-[var(--line)] hover:bg-[var(--canvas)] transition-colors"
+        >
+          <div className="relative shrink-0">
+            <img
+              src="https://i.pravatar.cc/120?img=12"
+              alt=""
+              width={38}
+              height={38}
+              className="rounded-full object-cover"
+            />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-white" />
+          </div>
+          <div className="flex flex-col min-w-0 leading-tight">
+            <span className="text-[13px] font-semibold text-[var(--ink-900)] truncate">
+              {user.name}
+            </span>
+            <span className="text-[11.5px] text-[var(--ink-400)] truncate">{user.handle}</span>
+          </div>
+        </Link>
       </aside>
 
       {/* ─────────── Mobile top bar ─────────── */}
       <header className="md:hidden fixed top-0 inset-x-0 z-50 h-14 flex items-center justify-between px-4 glass border-b border-[var(--line)]">
-        <GrimoireLogo compact />
+        <Logo compact />
         <div className="flex items-center gap-1">
-          <ThemeToggle compact />
           <Link
             href="/notifications"
             aria-label="Notifications"
             className="relative flex items-center justify-center w-9 h-9 rounded-full text-[var(--ink-500)]"
           >
-            <Bell className="w-[20px] h-[20px]" strokeWidth={2} />
+            <Bell className="w-[19px] h-[19px]" />
             {notificationCount > 0 && (
-              <span className="absolute top-1 right-1 flex items-center justify-center min-w-[15px] h-[15px] px-1 rounded-full bg-[var(--brand-500)] text-[var(--brand-ink)] text-[9px] font-bold ring-2 ring-[var(--app-bg)]">
+              <span className="absolute top-1 right-1 flex items-center justify-center min-w-[15px] h-[15px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold ring-2 ring-white">
                 {notificationCount > 9 ? "9+" : notificationCount}
               </span>
             )}
@@ -138,7 +146,7 @@ const Navbar = () => {
               height={32}
               className="rounded-full object-cover"
             />
-            <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[var(--success)] ring-2 ring-[var(--app-bg)]" />
+            <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-white" />
           </Link>
         </div>
       </header>
@@ -152,21 +160,21 @@ const Navbar = () => {
               key={href}
               href={href}
               aria-label={label}
-              className="relative flex-1 flex flex-col items-center justify-center gap-1 py-2.5 min-h-[54px]"
-              style={{ color: active ? "var(--brand-500)" : "var(--ink-400)" }}
+              className="relative flex-1 flex flex-col items-center justify-center gap-1 py-2.5"
+              style={{ color: active ? "var(--brand-600)" : "var(--ink-400)" }}
             >
               {active && (
                 <motion.span
                   layoutId="tab-active"
                   className="absolute top-0 h-[3px] w-9 rounded-b-full"
-                  style={{ background: "var(--brand-500)" }}
+                  style={{ background: "var(--brand-grad)" }}
                   transition={{ type: "spring", stiffness: 420, damping: 34 }}
                 />
               )}
               <span className="relative flex items-center justify-center">
-                <Icon className="w-[22px] h-[22px]" strokeWidth={active ? 2.4 : 2} />
+                <Icon className="w-[21px] h-[21px]" strokeWidth={active ? 2.5 : 2} />
                 {href === "/notifications" && notificationCount > 0 && (
-                  <span className="absolute -top-1 -right-2 flex items-center justify-center min-w-[15px] h-[15px] px-1 rounded-full bg-[var(--brand-500)] text-[var(--brand-ink)] text-[9px] font-bold ring-2 ring-[var(--app-bg)]">
+                  <span className="absolute -top-1 -right-2 flex items-center justify-center min-w-[15px] h-[15px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold ring-2 ring-white">
                     {notificationCount > 9 ? "9+" : notificationCount}
                   </span>
                 )}

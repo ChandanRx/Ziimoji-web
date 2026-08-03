@@ -24,12 +24,12 @@ interface Conversation {
   messages: Message[];
 }
 
-const seedMessages = (name: string, genre: string): Message[] => [
-  { id: "m1", fromMe: false, text: `Hey! caught your ${genre.toLowerCase()} story earlier 👀`, time: "9:41" },
-  { id: "m2", fromMe: true, text: "honestly couldn't sleep after writing it", time: "9:42" },
-  { id: "m3", fromMe: false, text: "sawww it, the ending got me 😂", time: "9:42", mood: genre },
-  { id: "m4", fromMe: true, text: "hahah that's the best part of Grimoire tbh", time: "9:43" },
-  { id: "m5", fromMe: false, text: `okay ${name.split(" ")[0]} out, catch you in the dark ✨`, time: "9:45" },
+const seedMessages = (name: string, mood: string): Message[] => [
+  { id: "m1", fromMe: false, text: `Hey! how's your ${mood.toLowerCase()} mood today? 👀`, time: "9:41" },
+  { id: "m2", fromMe: true, text: "honestly a whole vibe. just posted about it", time: "9:42" },
+  { id: "m3", fromMe: false, text: "sawww it, the emoji burst got me 😂", time: "9:42", mood },
+  { id: "m4", fromMe: true, text: "hahah that's the best part of Zimoji tbh", time: "9:43" },
+  { id: "m5", fromMe: false, text: `okay ${name.split(" ")[0]} out, catch you later ✨`, time: "9:45" },
 ];
 
 const buildConversations = (): Conversation[] =>
@@ -38,11 +38,11 @@ const buildConversations = (): Conversation[] =>
     .slice(0, 7)
     .map((person, i) => ({
       person,
-      preview: seedMessages(person.name, person.genre).at(-1)!.text,
+      preview: seedMessages(person.name, person.mood).at(-1)!.text,
       time: ["now", "2m", "18m", "1h", "3h", "1d", "2d"][i] ?? "1d",
       unread: i === 0 ? 2 : i === 2 ? 1 : 0,
       online: i % 2 === 0,
-      messages: seedMessages(person.name, person.genre),
+      messages: seedMessages(person.name, person.mood),
     }));
 
 export default function ChatsPage() {
@@ -56,7 +56,7 @@ export default function ChatsPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const active = conversations.find((c) => c.person.id === activeId)!;
-  const mood = getMood(active.person.genre);
+  const mood = getMood(active.person.mood);
   const messages = threads[activeId];
 
   useEffect(() => {
@@ -102,7 +102,7 @@ export default function ChatsPage() {
 
         <div className="flex-1 overflow-y-auto no-scrollbar">
           {conversations.map((c) => {
-            const cm = getMood(c.person.genre);
+            const cm = getMood(c.person.mood);
             const isActive = c.person.id === activeId;
             return (
               <button
@@ -129,7 +129,7 @@ export default function ChatsPage() {
                       {c.preview}
                     </span>
                     {c.unread > 0 && (
-                      <span className="shrink-0 flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-[var(--brand-600)] text-[var(--brand-ink)] text-[10px] font-bold">
+                      <span className="shrink-0 flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-[var(--brand-600)] text-white text-[10px] font-bold">
                         {c.unread}
                       </span>
                     )}
@@ -189,13 +189,13 @@ export default function ChatsPage() {
                   <div
                     className={`max-w-[75%] px-4 py-2.5 text-[14px] leading-snug ${
                       m.fromMe
-                        ? "text-[var(--brand-ink)] rounded-[18px] rounded-br-[6px]"
+                        ? "text-white rounded-[18px] rounded-br-[6px]"
                         : "bg-white text-[var(--ink-900)] rounded-[18px] rounded-bl-[6px] border border-[var(--line)]"
                     }`}
                     style={m.fromMe ? { background: "var(--brand-grad)" } : undefined}
                   >
                     {m.text}
-                    <span className={`block text-[10px] mt-1 ${m.fromMe ? "text-[var(--brand-ink)]/60" : "text-[var(--ink-400)]"}`}>
+                    <span className={`block text-[10px] mt-1 ${m.fromMe ? "text-white/70" : "text-[var(--ink-400)]"}`}>
                       {m.time}
                     </span>
                   </div>
@@ -225,7 +225,7 @@ export default function ChatsPage() {
             whileTap={{ scale: 0.9 }}
             onClick={send}
             disabled={!draft.trim()}
-            className="flex items-center justify-center w-10 h-10 rounded-full text-[var(--brand-ink)] shrink-0 disabled:opacity-40 transition-opacity"
+            className="flex items-center justify-center w-10 h-10 rounded-full text-white shrink-0 disabled:opacity-40 transition-opacity"
             style={{ background: "var(--brand-grad)" }}
             aria-label="Send"
           >
