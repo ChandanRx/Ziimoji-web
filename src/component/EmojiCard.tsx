@@ -1,6 +1,6 @@
 "use client";
 
-import { Maximize2, Heart, MessageCircle, Eye } from "lucide-react";
+import { ExpandOutlined as Maximize2, HeartOutlined as Heart, MessageOutlined as MessageCircle, EyeOutlined as Eye } from "@ant-design/icons";
 import AnimatedEmoji from "@/component/AnimatedEmoji";
 
 interface EmojiCardProps {
@@ -38,7 +38,7 @@ const EmojiCard = ({
 
         <div className="ec-fl">
           <div className="ec-fullscreen">
-            <Maximize2 className="ec-fullscreen-svg" strokeWidth={2.6} />
+            <Maximize2 className="ec-fullscreen-svg" />
           </div>
         </div>
 
@@ -61,15 +61,15 @@ const EmojiCard = ({
 
       <div className="ec-btns">
         <div className="ec-pill ec-likes">
-          <Heart className="ec-pill-svg" fill="currentColor" strokeWidth={0} />
+          <Heart className="ec-pill-svg" />
           <span className="ec-pill-text">{likes}</span>
         </div>
         <div className="ec-pill ec-comments">
-          <MessageCircle className="ec-pill-svg" strokeWidth={2.6} />
+          <MessageCircle className="ec-pill-svg" />
           <span className="ec-pill-text">{comments}</span>
         </div>
         <div className="ec-pill ec-views">
-          <Eye className="ec-pill-svg" strokeWidth={2.6} />
+          <Eye className="ec-pill-svg" />
           <span className="ec-pill-text">{views}</span>
         </div>
       </div>
@@ -84,7 +84,7 @@ const EmojiCard = ({
           position: relative;
           width: 15em;
           height: 10em;
-          background: linear-gradient(270deg, #ce68d9, #45c6db, #45db79);
+          background: linear-gradient(270deg, #45c6db, #45db79);
           background-size: 800% 800%;
           animation: ec-gradient 3s ease infinite;
           transition: 0.4s ease-in-out;
@@ -295,12 +295,10 @@ const EmojiCard = ({
           scale: 1.1;
           background: linear-gradient(
             90deg,
-            #ce68d9,
             #45c6db,
             #45db79,
-            #9f45b0,
-            #e54ed0,
-            #ffe4f2
+            #45c6db,
+            #45db79
           );
           background-size: 800% 800%;
           animation: ec-gradient 1s ease infinite;

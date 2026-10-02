@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowLeft, Send, Search, Phone, Video, MoreHorizontal, Smile } from "lucide-react";
+import { LeftOutlined as ArrowLeft, SendOutlined as Send, SearchOutlined as Search, PhoneOutlined as Phone, VideoCameraOutlined as Video, MoreOutlined as MoreHorizontal, SmileOutlined as Smile } from "@ant-design/icons";
 import { getMood, moods } from "@/lib/moods";
 import { people, currentUser } from "@/lib/mockData";
 
@@ -82,7 +82,7 @@ export default function ChatsPage() {
   };
 
   return (
-    <div className="flex h-screen md:ml-[264px]">
+    <div className="flex h-screen ">
       {/* ── Conversation list ── */}
       <aside
         className={`${
@@ -92,7 +92,7 @@ export default function ChatsPage() {
         <div className="px-5 pt-5 pb-3 border-b border-[var(--line)]">
           <h1 className="text-[22px] font-bold text-[var(--ink-900)]">Messages</h1>
           <div className="mt-3 flex items-center gap-2.5 bg-[var(--canvas)] rounded-full px-4 py-2.5">
-            <Search className="w-4 h-4 text-[var(--ink-400)]" />
+            <Search className="text-[16px] text-[var(--ink-400)]" />
             <input
               placeholder="Search messages…"
               className="flex-1 bg-transparent text-[13.5px] text-[var(--ink-900)] placeholder-[var(--ink-400)] focus:outline-none"
@@ -154,7 +154,7 @@ export default function ChatsPage() {
             className="md:hidden flex items-center justify-center w-9 h-9 rounded-full hover:bg-black/[0.045] transition-colors"
             aria-label="Back to conversations"
           >
-            <ArrowLeft className="w-[18px] h-[18px] text-[var(--ink-700)]" />
+            <ArrowLeft className="text-[18px]] ] text-[var(--ink-700)]" />
           </button>
           <Link href={`/profile/${active.person.id}`} className="flex items-center gap-3 flex-1 min-w-0">
             <span className="block rounded-full p-[2px]" style={{ background: mood.grad }}>
@@ -212,7 +212,7 @@ export default function ChatsPage() {
             className="flex items-center justify-center w-10 h-10 rounded-full text-[var(--ink-400)] hover:bg-black/[0.045] transition-colors shrink-0"
             aria-label="Add emoji"
           >
-            <Smile className="w-5 h-5" />
+            <Smile className="text-[20px]" />
           </button>
           <input
             value={draft}
@@ -229,7 +229,7 @@ export default function ChatsPage() {
             style={{ background: "var(--brand-grad)" }}
             aria-label="Send"
           >
-            <Send className="w-[18px] h-[18px]" />
+            <Send className="text-[18px]] ]" />
           </motion.button>
         </div>
       </section>

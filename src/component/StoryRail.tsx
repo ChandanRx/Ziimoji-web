@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { PlusOutlined as Plus } from "@ant-design/icons";
 import { getMood } from "@/lib/moods";
 import AnimatedEmoji from "@/component/AnimatedEmoji";
 
@@ -47,7 +47,7 @@ const StoryRail = () => (
             className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-5 h-5 rounded-full ring-2 ring-white"
             style={{ background: "var(--brand-grad)" }}
           >
-            <Plus className="w-3 h-3 text-white" strokeWidth={3} />
+            <Plus className="text-[12px] text-white" />
           </span>
         </div>
         <span className="text-[11px] text-[var(--ink-500)] font-medium truncate w-full text-center">

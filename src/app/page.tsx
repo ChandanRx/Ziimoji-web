@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { motion } from "motion/react";
 import PostCard from "@/component/PostCard";
 import RightSidebar from "@/component/RightSidebar";
@@ -191,7 +191,7 @@ export default function Home() {
   return (
     <div className="flex h-screen">
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
+      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0  lg:pr-80">
         {/* Sticky glass header with segmented tabs */}
         {/* top-0 is relative to the scrollport, whose pt-14 already clears the fixed mobile bar */}
         <div className="sticky top-0 z-30 glass border-b border-[var(--line)]">
@@ -225,7 +225,9 @@ export default function Home() {
         <div className="max-w-2xl mx-auto px-4 py-5">
           <StoryRail />
 
-          <CreatePost onPostCreate={handlePostCreate} />
+          <Suspense fallback={<div className="h-[100px] mb-5 rounded-2xl bg-neutral-100 dark:bg-neutral-800 animate-pulse" />}>
+            <CreatePost onPostCreate={handlePostCreate} />
+          </Suspense>
 
           {/* Posts Feed */}
           <div className="space-y-5">

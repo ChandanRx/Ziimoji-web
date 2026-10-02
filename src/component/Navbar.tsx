@@ -4,9 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import {
-  Home, Search, Users, MessageCircle, Flame,
-  Bookmark, Bell, User, Plus,
-} from "lucide-react";
+  HomeOutlined as Home,
+  SearchOutlined as Search,
+  TeamOutlined as Users,
+  MessageOutlined as MessageCircle,
+  FireOutlined as Flame,
+  BookOutlined as Bookmark,
+  BellOutlined as Bell,
+  UserOutlined as User,
+  PlusOutlined as Plus,
+} from "@ant-design/icons";
 import Logo from "@/component/Logo";
 
 const user = { id: "123", name: "Chandan", handle: "@chandan_user" };
@@ -19,7 +26,7 @@ const links = [
   { href: "/trending", Icon: Flame, label: "Trending" },
   { href: "/bookmarks", Icon: Bookmark, label: "Bookmarks" },
   { href: "/notifications", Icon: Bell, label: "Notifications" },
-  { href: `/profile/${user.id}`, Icon: User, label: "Profile" },
+  { href: `/profile/${user.id}`, Icon: User, label: "Profile", hideDesktop: true },
 ];
 
 /* The five that earn a slot on a phone */
@@ -38,37 +45,29 @@ const Navbar = () => {
   return (
     <>
       {/* ─────────── Desktop sidebar ─────────── */}
-      <aside className="hidden md:flex flex-col w-[264px] h-screen fixed z-50 bg-white border-r border-[var(--line)] px-4 pt-6 pb-5">
-        <div className="px-2 mb-7">
-          <Logo />
+      <aside className="hidden md:flex flex-col w-[80px] hover:w-[264px] transition-[width] duration-300 ease-in-out overflow-hidden h-screen fixed top-0 z-50 bg-white border-r border-neutral-200 px-3 pt-6 pb-5 group/sidebar hover:shadow-2xl hover:shadow-black/5">
+        <div className="px-2 mb-7 overflow-hidden shrink-0">
+          <Link href="/" className="flex items-center gap-2 h-[46px]">
+            <img src="/logo_zm.png" alt="Zimoji" className="h-9 w-9 object-contain shrink-0 group-hover/sidebar:hidden block" />
+            <img src="/logo.png" alt="Zimoji" className="h-[46px] object-contain shrink-0 hidden group-hover/sidebar:block" />
+          </Link>
         </div>
 
-        <nav className="flex flex-col gap-0.5 flex-1">
-          {links.map(({ href, Icon, label }) => {
+        <nav className="flex flex-col gap-1 flex-1">
+          {links.filter((l) => !l.hideDesktop).map(({ href, Icon, label }) => {
             const active = isActive(href);
             return (
               <Link
                 key={href}
                 href={href}
-                className="relative flex items-center gap-3.5 px-3.5 py-2.5 rounded-sm text-[14px] font-medium transition-colors group"
+                className="relative flex items-center gap-4 px-3 py-3 rounded-xl text-[14px] transition-colors group"
                 style={{ color: active ? "var(--brand-600)" : "var(--ink-500)" }}
               >
-                {/* Animated active pill — slides between items */}
-                {active && (
-                  <motion.span
-                    layoutId="nav-active"
-                    className="absolute inset-0 rounded-sm"
-                    style={{ background: "var(--brand-50)" }}
-                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                  />
-                )}
-
-                <span className="relative flex items-center justify-center w-5 h-5 shrink-0">
+                <span className="relative flex items-center justify-center w-6 h-6 shrink-0">
                   <Icon
-                    className={`w-[19px] h-[19px] transition-colors ${
+                    className={`text-[22px] transition-colors ${
                       active ? "" : "text-[var(--ink-400)] group-hover:text-[var(--ink-700)]"
                     }`}
-                    strokeWidth={active ? 2.4 : 2}
                   />
                   {href === "/notifications" && notificationCount > 0 && (
                     <span className="absolute -top-1.5 -right-2 flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold ring-2 ring-white">
@@ -78,11 +77,22 @@ const Navbar = () => {
                 </span>
 
                 <span
-                  className={`relative transition-colors ${
-                    active ? "font-semibold" : "group-hover:text-[var(--ink-700)]"
+                  className={`relative whitespace-nowrap opacity-0 w-0 group-hover/sidebar:w-auto group-hover/sidebar:opacity-100 transition-all duration-300 pb-1 ${
+                    active ? "font-bold" : "font-medium"
                   }`}
                 >
                   {label}
+                  {active && (
+                    <motion.span
+                      layoutId="sidebar-active"
+                      className="absolute bottom-0 inset-x-0 h-[3px] rounded-full"
+                      style={{ background: "var(--brand-grad)" }}
+                      transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                    />
+                  )}
+                  {!active && (
+                    <span className="absolute bottom-0 inset-x-0 h-[2px] rounded-full bg-[var(--line)] opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                  )}
                 </span>
               </Link>
             );
@@ -91,33 +101,42 @@ const Navbar = () => {
           {/* Primary CTA */}
           <Link
             href="/?compose=1"
-            className="btn-brand mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-sm text-[14px] font-semibold"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent("open-create-post"));
+              }
+            }}
+            className="btn-brand mt-4 flex items-center justify-center group-hover/sidebar:justify-start gap-0 group-hover/sidebar:gap-3 h-[44px] w-[44px] group-hover/sidebar:w-full group-hover/sidebar:px-4 rounded-xl text-[14.5px] font-bold overflow-hidden transition-all duration-300 mx-auto group-hover/sidebar:mx-0 shadow-lg shadow-[#5c3aff]/25 hover:shadow-[#5c3aff]/40 active:scale-[0.96]"
           >
-            <Plus className="w-4 h-4" strokeWidth={2.6} />
-            Create post
+            <span className="shrink-0 flex items-center justify-center">
+              <Plus className="text-[20px]" />
+            </span>
+            <span className="whitespace-nowrap opacity-0 w-0 group-hover/sidebar:w-auto group-hover/sidebar:opacity-100 transition-all duration-300">
+              Create post
+            </span>
           </Link>
         </nav>
 
         {/* User card */}
         <Link
           href={`/profile/${user.id}`}
-          className="flex items-center gap-3 p-2.5 rounded-sm border border-[var(--line)] hover:bg-[var(--canvas)] transition-colors"
+          className="flex items-center gap-3 p-1.5 mt-4 rounded-xl border border-transparent hover:border-[var(--line)] hover:bg-[var(--canvas)] transition-all overflow-hidden w-[54px] group-hover/sidebar:w-full mx-auto group-hover/sidebar:mx-0"
         >
-          <div className="relative shrink-0">
+          <div className="relative shrink-0 flex items-center justify-center">
             <img
               src="https://i.pravatar.cc/120?img=12"
               alt=""
-              width={38}
-              height={38}
+              width={42}
+              height={42}
               className="rounded-full object-cover"
             />
             <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-white" />
           </div>
-          <div className="flex flex-col min-w-0 leading-tight">
-            <span className="text-[13px] font-semibold text-[var(--ink-900)] truncate">
+          <div className="flex flex-col min-w-0 leading-tight opacity-0 w-0 group-hover/sidebar:w-auto group-hover/sidebar:opacity-100 transition-all duration-300">
+            <span className="text-[13px] font-semibold text-[var(--ink-900)] whitespace-nowrap hover:underline underline-offset-2">
               {user.name}
             </span>
-            <span className="text-[11.5px] text-[var(--ink-400)] truncate">{user.handle}</span>
+            <span className="text-[11.5px] text-[var(--ink-400)] whitespace-nowrap">{user.handle}</span>
           </div>
         </Link>
       </aside>
@@ -131,7 +150,7 @@ const Navbar = () => {
             aria-label="Notifications"
             className="relative flex items-center justify-center w-9 h-9 rounded-full text-[var(--ink-500)]"
           >
-            <Bell className="w-[19px] h-[19px]" />
+            <Bell className="text-[20px]" />
             {notificationCount > 0 && (
               <span className="absolute top-1 right-1 flex items-center justify-center min-w-[15px] h-[15px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold ring-2 ring-white">
                 {notificationCount > 9 ? "9+" : notificationCount}
@@ -172,7 +191,7 @@ const Navbar = () => {
                 />
               )}
               <span className="relative flex items-center justify-center">
-                <Icon className="w-[21px] h-[21px]" strokeWidth={active ? 2.5 : 2} />
+                <Icon className="text-[21px]" />
                 {href === "/notifications" && notificationCount > 0 && (
                   <span className="absolute -top-1 -right-2 flex items-center justify-center min-w-[15px] h-[15px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold ring-2 ring-white">
                     {notificationCount > 9 ? "9+" : notificationCount}

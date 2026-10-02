@@ -1,16 +1,10 @@
 "use client";
 
-import { useRef, useState, type ComponentType } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import {
-  Heart,
-  MessageCircle,
-  Bookmark,
-  MoreHorizontal,
-  type LucideProps,
-} from "lucide-react";
-import { getMood, resolveLottie } from "@/lib/moods";
+import { MessageOutlined as MessageCircle, BookOutlined as Bookmark, MoreOutlined as MoreHorizontal, ShareAltOutlined as Share2, CheckOutlined as Check } from "@ant-design/icons";
+import { getMood, resolveLottie, moodColors } from "@/lib/moods";
 import AnimatedEmoji from "@/component/AnimatedEmoji";
 import { celebrate } from "@/lib/confetti";
 
@@ -30,7 +24,6 @@ interface Post {
   isBookmarked?: boolean;
 }
 
-// Non-bouncy tween used for subtle tap/hover feedback (no spring overshoot).
 const WOBBLE = { duration: 0.15, ease: "easeOut" } as const;
 
 /** Compact count formatting: 1200 -> "1.2k". */
@@ -47,83 +40,6 @@ const originOf = (el: HTMLElement | null) => {
   };
 };
 
-const pillBase =
-  "inline-flex items-center gap-1.5 h-9 rounded-xl px-3 text-[13px] font-bold outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent select-none";
-const pillIdle =
-  "text-[var(--ink-500)] hover:bg-black/[0.05] hover:-translate-y-0.5 focus-visible:ring-black/15 dark:text-neutral-400 dark:hover:bg-white/[0.06] dark:focus-visible:ring-white/20";
-
-type IconType = ComponentType<LucideProps>;
-
-/** A chunky, springy action pill — the core interaction primitive of the card. */
-function ActionPill({
-  icon: Icon,
-  count,
-  ariaLabel,
-  active = false,
-  filled = false,
-  accent,
-  chip,
-  onClick,
-  btnRef,
-  emojiSrc,
-}: {
-  icon: IconType;
-  count?: number;
-  ariaLabel: string;
-  active?: boolean;
-  filled?: boolean;
-  accent: string;
-  chip: string;
-  onClick?: () => void;
-  btnRef?: React.Ref<HTMLButtonElement>;
-  /** When set, renders the animated mood emoji instead of the line icon. */
-  emojiSrc?: string;
-}) {
-  return (
-    <motion.button
-      ref={btnRef}
-      type="button"
-      onClick={onClick}
-      aria-label={ariaLabel}
-      aria-pressed={active}
-      whileTap={{ scale: 0.9 }}
-      transition={WOBBLE}
-      className={`${pillBase} ${active && !emojiSrc ? "" : pillIdle}`}
-      style={
-        active
-          ? emojiSrc
-            ? { color: accent } // like pill: coloured text only, no raised box
-            : { color: accent, background: chip, boxShadow: `0 5px 0 0 ${accent}26, inset 0 0 0 1.5px ${accent}3a` }
-          : undefined
-      }
-    >
-      <motion.span
-        className="flex"
-        animate={active ? { scale: [1, 1.4, 1] } : { scale: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        {emojiSrc ? (
-          // Static (paused on first frame) until liked; animates once active.
-          <AnimatedEmoji
-            key={active ? "on" : "off"}
-            src={emojiSrc}
-            size={18}
-            autoplay={active}
-            loop={active}
-          />
-        ) : (
-          <Icon
-            className="h-4 w-4"
-            strokeWidth={2.4}
-            fill={filled && active ? "currentColor" : "none"}
-          />
-        )}
-      </motion.span>
-      {count != null && <span className="tabular-nums">{formatCount(count)}</span>}
-    </motion.button>
-  );
-}
-
 const PostCard = ({
   post,
   onLike,
@@ -136,9 +52,16 @@ const PostCard = ({
   const lottieSrc = resolveLottie(post.moodEmoji, mood);
   const reduceMotion = useReducedMotion();
 
+  const moodInfo = moodColors[post.mood.toLowerCase()] ?? {
+    hex: mood.hex || "#FACC15",
+    rgb: mood.rgb || "250, 204, 21",
+    emoji: mood.emoji || "😊",
+  };
+
   const [isLiked, setIsLiked] = useState(post.isLiked ?? false);
   const [likesCount, setLikesCount] = useState(post.likes);
   const [isBookmarked, setIsBookmarked] = useState(post.isBookmarked ?? false);
+  const [copied, setCopied] = useState(false);
   // Bumps a key each like so the centre float re-mounts and re-plays.
   const [floatKey, setFloatKey] = useState(0);
   const likeBtnRef = useRef<HTMLButtonElement>(null);
@@ -160,82 +83,118 @@ const PostCard = ({
     });
   };
 
+  const handleShare = async () => {
+    const url = typeof window !== "undefined" ? `${window.location.origin}/post/${post.id}` : "";
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: `Ziimoji Post by ${post.username}`,
+          text: post.content,
+          url,
+        });
+      } catch {
+        // User cancelled or share failed fallback
+      }
+    } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const glassPillBase =
+    "inline-flex items-center gap-1.5 h-9 rounded-full px-3.5 text-xs sm:text-[13px] font-semibold text-white/95 bg-white/15 dark:bg-black/40 backdrop-blur-md border border-white/20 hover:bg-white/25 active:scale-95 transition-all duration-200 outline-none select-none shadow-md cursor-pointer";
+
   return (
     <motion.article
-      className="group relative overflow-hidden rounded-sm border-2 bg-white dark:bg-[#161719]"
-      style={{
-        borderColor: mood.border,
-        boxShadow: `0 14px 34px -20px ${mood.accent}99, var(--shadow-sm)`,
-      }}
+      whileHover={reduceMotion ? undefined : { y: -3 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="group relative overflow-hidden rounded-sm bg-neutral-900 text-white shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/25 transition-all duration-300 w-full"
     >
-      {/* Even mood colour filling the whole card */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{ background: `${mood.accent}22` }}
-      />
-
-      {/* Decorative emoji in the corner — kept clear, above the colour wash */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute right-2 top-2 z-[2] rotate-6"
-      >
-        <AnimatedEmoji src={lottieSrc} size={72} preset="float" />
-      </div>
-
       {/* Mood emoji that floats up the middle when the post is liked */}
       <AnimatePresence>
         {floatKey > 0 && (
           <motion.div
             key={floatKey}
             aria-hidden
-            className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center"
-            initial={{ opacity: 0, scale: 0.5, y: 30 }}
-            animate={{ opacity: [0, 1, 1, 0], scale: [0.5, 1.15, 1, 0.95], y: [30, -30, -90, -150] }}
+            className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center"
+            initial={{ opacity: 0, scale: 0.5, y: 40 }}
+            animate={{ opacity: [0, 1, 1, 0], scale: [0.5, 1.2, 1, 0.9], y: [40, -40, -100, -170] }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut", times: [0, 0.25, 0.6, 1] }}
+            transition={{ duration: 1.3, ease: "easeOut", times: [0, 0.25, 0.6, 1] }}
           >
-            <AnimatedEmoji src={lottieSrc} size={110} preset="none" />
+            <AnimatedEmoji src={lottieSrc} size={120} preset="none" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="relative p-4">
-        {/* ── Header ── */}
-        <header className="flex items-center gap-3">
-          <Link
-            href={`/profile/${post.userId}`}
-            className="shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#161719]"
-            style={{ color: mood.accent }}
-            aria-label={`${post.username}'s profile`}
+      {/* ── Media Showcase Container ── */}
+      <div className="relative w-full aspect-[4/5] sm:aspect-[1.1/1] overflow-hidden bg-neutral-950 flex flex-col justify-between">
+        {/* Post Image */}
+        {post.imageUrl ? (
+          <motion.img
+            src={post.imageUrl}
+            alt=""
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover group-hover:scale-[1.025] transition-transform duration-700 ease-out"
+          />
+        ) : (
+          /* Ambient Gradient Canvas for text-only post fallback */
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-br from-neutral-900 via-slate-900 to-neutral-950"
           >
-            <motion.span
-              className="block rounded-full p-[3px]"
-              style={{ background: mood.grad, boxShadow: `0 6px 16px -6px ${mood.accent}` }}
-              whileHover={reduceMotion ? undefined : { scale: 1.04 }}
-              transition={WOBBLE}
-            >
-              <img
-                src={post.userAvatar}
-                alt=""
-                width={44}
-                height={44}
-                loading="lazy"
-                className="block h-11 w-11 rounded-full object-cover ring-2 ring-white dark:ring-[#161719]"
-              />
-            </motion.span>
-          </Link>
+            <div
+              className="absolute inset-0 opacity-30"
+              style={{
+                background: `radial-gradient(circle at 50% 60%, rgba(${moodInfo.rgb}, 0.5) 0%, transparent 70%)`,
+              }}
+            />
+          </div>
+        )}
 
-          <div className="min-w-0 flex-1">
-            <Link href={`/profile/${post.userId}`} className="rounded outline-none focus-visible:underline">
-              <h3 className="truncate text-[15px] font-extrabold leading-tight tracking-[-0.01em] text-[var(--ink-900)] dark:text-neutral-100">
-                {post.username}
-              </h3>
+        {/* Top Dark Scrim Gradient for Header Contrast */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-0 left-0 right-0 h-28 sm:h-32 bg-gradient-to-b from-black/80 via-black/40 to-transparent z-10"
+        />
+
+        {/* ── Floating Header Over Image ── */}
+        <header className="relative z-20 flex items-center justify-between gap-3 p-3.5 sm:p-5">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <Link
+              href={`/profile/${post.userId}`}
+              className="shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+              aria-label={`${post.username}'s profile`}
+            >
+              <motion.div
+                whileHover={reduceMotion ? undefined : { scale: 1.05 }}
+                transition={WOBBLE}
+                className="relative rounded-full p-[2px]"
+                style={{ background: mood.grad }}
+              >
+                <img
+                  src={post.userAvatar}
+                  alt=""
+                  width={44}
+                  height={44}
+                  loading="lazy"
+                  className="h-9 w-9 sm:h-10 sm:w-10 rounded-full object-cover ring-2 ring-white/40"
+                />
+              </motion.div>
             </Link>
-            <div className="mt-0.5 flex items-center gap-1.5 text-[12.5px] text-[var(--ink-400)] dark:text-neutral-500">
-              <span className="truncate">@{post.username}</span>
-              <span aria-hidden>·</span>
-              <time className="whitespace-nowrap">{post.timestamp}</time>
+
+            <div className="min-w-0">
+              <Link href={`/profile/${post.userId}`} className="rounded outline-none hover:underline">
+                <h3 className="truncate text-xs sm:text-sm font-bold leading-tight text-white tracking-tight drop-shadow-sm">
+                  {post.username}
+                </h3>
+              </Link>
+              <div className="flex items-center gap-1.5 text-[11px] sm:text-[12px] text-white/75 drop-shadow-sm">
+                <span className="truncate">@{post.username}</span>
+                <span aria-hidden>·</span>
+                <time className="whitespace-nowrap">{post.timestamp}</time>
+              </div>
             </div>
           </div>
 
@@ -244,76 +203,131 @@ const PostCard = ({
             aria-label="More options"
             whileTap={{ scale: 0.85, rotate: 90 }}
             transition={WOBBLE}
-            className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--ink-400)] outline-none transition-colors hover:bg-black/[0.05] focus-visible:ring-2 focus-visible:ring-black/15 dark:text-neutral-500 dark:hover:bg-white/[0.06] dark:focus-visible:ring-white/20"
+            className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-full text-white/90 bg-black/20 hover:bg-white/20 backdrop-blur-md border border-white/10 transition-colors outline-none"
           >
-            <MoreHorizontal className="h-4 w-4" />
+            <MoreHorizontal className="text-[16px]" />
           </motion.button>
         </header>
 
-        {/* ── Content ── */}
-        <p className="relative z-10 mt-3 line-clamp-3 max-w-[62ch] whitespace-pre-wrap text-[14.5px] leading-[1.6] text-[var(--ink-700)] dark:text-neutral-300">
-          {post.content}
-        </p>
-      </div>
+        {/* ── Lower Section: Atmosphere, Caption & Actions ── */}
+        <div className="relative z-20 mt-auto flex flex-col justify-end">
+          {/* Subtle Mood-Based Gradient Wash over lower ~35% of media */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 left-0 right-0 h-[220px] sm:h-[260px] z-10"
+            style={{
+              background: `linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(${moodInfo.rgb}, 0.2) 45%, rgba(0, 0, 0, 0.25) 75%, transparent 100%)`,
+            }}
+          />
 
-      {/* ── Image hero — full-bleed, flush to the card edges ── */}
-      {post.imageUrl && (
-        <div className="relative z-10 mt-1 mb-3">
-          <div className="relative aspect-[16/10] overflow-hidden">
-            <motion.img
-              src={post.imageUrl}
-              alt=""
-              loading="lazy"
-              className="h-full w-full object-cover"
-              whileHover={reduceMotion ? undefined : { scale: 1.03 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            />
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{ background: `linear-gradient(to top, ${mood.accent}26, transparent 55%)` }}
-            />
+          {/* Caption over the atmospheric gradient */}
+          {post.content && (
+            <div className="relative z-20 px-4 sm:px-5 pb-3">
+              <p className="line-clamp-4 max-w-[65ch] text-[14px] sm:text-[15px] font-medium leading-relaxed text-white/95 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] whitespace-pre-wrap">
+                {post.content}
+              </p>
+            </div>
+          )}
+
+          {/* ── Bottom Action Bar ── */}
+          <div className="relative z-20 flex items-center justify-between gap-1.5 sm:gap-2 px-3.5 sm:px-5 pb-3.5 sm:pb-5 pt-1">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* 1. Mood Reaction Pill (Replaces traditional heart) */}
+              <motion.button
+                ref={likeBtnRef}
+                type="button"
+                onClick={handleLike}
+                aria-label={isLiked ? "Remove reaction" : `React ${post.mood}`}
+                aria-pressed={isLiked}
+                whileTap={{ scale: 0.92 }}
+                transition={WOBBLE}
+                className={`${glassPillBase} ${
+                  isLiked
+                    ? "bg-white/30 dark:bg-white/25 border-white/40 ring-1 ring-white/50 text-white"
+                    : ""
+                }`}
+                style={
+                  isLiked
+                    ? {
+                        boxShadow: `0 0 16px rgba(${moodInfo.rgb}, 0.45)`,
+                      }
+                    : undefined
+                }
+              >
+                <motion.span
+                  className="flex items-center"
+                  animate={isLiked ? { scale: [1, 1.35, 1] } : { scale: 1 }}
+                  transition={{ duration: 0.35 }}
+                >
+                  <AnimatedEmoji
+                    src={lottieSrc}
+                    size={20}
+                    autoplay={isLiked}
+                    loop={isLiked}
+                  />
+                </motion.span>
+                <span className="tabular-nums font-bold drop-shadow-sm">
+                  {formatCount(likesCount)}
+                </span>
+              </motion.button>
+
+              {/* 2. Comments Pill */}
+              <motion.div whileTap={{ scale: 0.92 }} transition={WOBBLE}>
+                <Link
+                  href={`/post/${post.id}`}
+                  aria-label={`Comment on post, ${post.comments} comments`}
+                  className={glassPillBase}
+                >
+                  <MessageCircle className="text-[16px] stroke-[2.2] text-white/90" />
+                  <span className="tabular-nums font-medium drop-shadow-sm">
+                    {formatCount(post.comments)}
+                  </span>
+                </Link>
+              </motion.div>
+            </div>
+
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* 3. Share Pill */}
+              <motion.button
+                type="button"
+                onClick={handleShare}
+                aria-label="Share post"
+                whileTap={{ scale: 0.92 }}
+                transition={WOBBLE}
+                className={glassPillBase}
+              >
+                {copied ? (
+                  <>
+                    <Check className="text-[16px] text-emerald-400 stroke-[2.5]" />
+                    <span className="text-emerald-300 font-medium">Copied!</span>
+                  </>
+                ) : (
+                  <Share2 className="text-[16px] stroke-[2.2] text-white/90" />
+                )}
+              </motion.button>
+
+              {/* 4. Bookmark Pill */}
+              <motion.button
+                ref={bookmarkBtnRef}
+                type="button"
+                onClick={handleBookmark}
+                aria-label={isBookmarked ? "Remove bookmark" : "Save post"}
+                aria-pressed={isBookmarked}
+                whileTap={{ scale: 0.92 }}
+                transition={WOBBLE}
+                className={`${glassPillBase} ${
+                  isBookmarked
+                    ? "bg-white/30 dark:bg-white/25 border-white/40 text-amber-300"
+                    : ""
+                }`}
+              >
+                <Bookmark
+                  className="text-[16px] stroke-[2.2]"
+                />
+              </motion.button>
+            </div>
           </div>
         </div>
-      )}
-
-      {/* ── Actions ── */}
-      <div className="relative z-10 flex flex-wrap items-center gap-1.5 px-3 pb-3 pt-1">
-        <ActionPill
-          icon={Heart}
-          count={likesCount}
-          ariaLabel={isLiked ? "Unlike post" : "Like post"}
-          active={isLiked}
-          accent={mood.accent}
-          chip={mood.chip}
-          onClick={handleLike}
-          btnRef={likeBtnRef}
-          emojiSrc={lottieSrc}
-        />
-
-        <motion.div whileTap={{ scale: 0.85, rotate: -4 }} transition={WOBBLE}>
-          <Link
-            href={`/post/${post.id}`}
-            aria-label={`Comment on post, ${post.comments} comments`}
-            className={`${pillBase} ${pillIdle}`}
-          >
-            <MessageCircle className="h-4 w-4" strokeWidth={2.4} />
-            <span className="tabular-nums">{formatCount(post.comments)}</span>
-          </Link>
-        </motion.div>
-
-        <div className="flex-1" />
-
-        <ActionPill
-          icon={Bookmark}
-          ariaLabel={isBookmarked ? "Remove bookmark" : "Save post"}
-          active={isBookmarked}
-          filled
-          accent={mood.accent}
-          chip={mood.chip}
-          onClick={handleBookmark}
-          btnRef={bookmarkBtnRef}
-        />
       </div>
     </motion.article>
   );

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Bookmark } from "lucide-react";
+import { BookOutlined as Bookmark } from "@ant-design/icons";
 import PostCard from "@/component/PostCard";
 import RightSidebar from "@/component/RightSidebar";
 import AnimatedEmoji from "@/component/AnimatedEmoji";
@@ -25,13 +25,13 @@ export default function BookmarksPage() {
 
   return (
     <div className="flex h-screen">
-      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
+      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0  lg:pr-80">
         {/* Header */}
         <div className="sticky top-0 z-30 glass border-b border-[var(--line)]">
           <div className="max-w-2xl mx-auto px-4 py-4">
             <div className="flex items-center gap-2">
               <div className="flex items-center justify-center w-8 h-8 rounded-[10px]" style={{ background: "var(--brand-grad)" }}>
-                <Bookmark className="w-[17px] h-[17px] text-white" fill="currentColor" />
+                <Bookmark className="text-[17px] text-white" />
               </div>
               <div>
                 <h1 className="text-[22px] font-bold tracking-tight text-[var(--ink-900)] leading-none">Bookmarks</h1>
@@ -90,7 +90,7 @@ export default function BookmarksPage() {
           ) : (
             <div className="flex flex-col items-center gap-3 py-24 text-center">
               <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--brand-50)]">
-                <Bookmark className="w-6 h-6 text-[var(--brand-600)]" />
+                <Bookmark className="text-[24px] text-[var(--brand-600)]" />
               </div>
               <div>
                 <p className="text-[15px] font-semibold text-[var(--ink-700)]">No saved moods yet</p>

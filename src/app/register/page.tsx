@@ -1,9 +1,5 @@
-import React from 'react'
+import { redirect } from "next/navigation";
 
-const Register = () => {
-  return (
-    <div>Register</div>
-  )
+export default function Register() {
+  redirect("/signup");
 }
-
-export default Register

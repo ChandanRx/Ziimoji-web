@@ -9,7 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ant-design/icons": "^6.3.4",
     "@lottiefiles/dotlottie-react": "^0.19.12",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
+    "@tanstack/react-query": "^5.104.1",
+    "@tanstack/react-query-devtools": "^5.104.1",
     "canvas-confetti": "^1.9.4",
     "gsap": "^3.14.2",
     "lucide-react": "^0.577.0",

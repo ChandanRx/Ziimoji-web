@@ -2,13 +2,10 @@
 
 import type { ReactNode } from "react";
 import { motion } from "motion/react";
-import Logo, { LogoMark } from "@/component/Logo";
-import AnimatedEmoji from "@/component/AnimatedEmoji";
-import { moods } from "@/lib/moods";
+import Logo from "@/component/Logo";
 
 /**
- * Split-screen auth layout: a brand panel on the left (desktop only) and the
- * form on the right. Shared by the sign-in and sign-up screens.
+ * Centered minimalist auth layout.
  */
 export default function AuthShell({
   title,
@@ -22,105 +19,60 @@ export default function AuthShell({
   footer: ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-[var(--canvas)]">
-      {/* ── Brand panel ── */}
-      <aside
-        className="relative hidden w-[46%] max-w-[560px] flex-col justify-between overflow-hidden p-12 text-white lg:flex"
-        style={{ background: "var(--brand-grad)" }}
-      >
-        {/* soft decorative blobs */}
-        <span aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/20 blur-3xl" />
-        <span aria-hidden className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-black/10 blur-3xl" />
+    <div className="flex min-h-screen items-center justify-center bg-white relative overflow-hidden">
+      {/* Soft decorative blooms */}
+      <div className="pointer-events-none absolute -bottom-32 -left-32 h-[500px] w-[500px] rounded-full bg-purple-100/60 blur-[100px]" />
+      <div className="pointer-events-none absolute -top-32 -right-32 h-[500px] w-[500px] rounded-full bg-green-100/40 blur-[100px]" />
 
-        <div className="relative flex items-center gap-2.5">
-          <LogoMark size={40} className="ring-2 ring-white/40" />
-          <span className="text-[22px] font-extrabold tracking-tight text-white">Zimoji</span>
-        </div>
-
-        <div className="relative">
-          <h2 className="text-[34px] font-extrabold leading-[1.1] tracking-tight">
-            Express every
-            <br />
-            mood you feel.
-          </h2>
-          <p className="mt-4 max-w-sm text-[15px] leading-relaxed text-white/85">
-            Turn feelings into pixels — share your vibe with animated emojis,
-            visuals, and the people who get you.
-          </p>
-
-          {/* floating mood emojis */}
-          <div className="mt-8 flex items-center gap-3">
-            {moods.map((m, i) => (
-              <motion.span
-                key={m.label}
-                initial={{ y: 0 }}
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }}
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm ring-1 ring-white/25"
-                title={m.label}
-              >
-                <AnimatedEmoji src={m.lottie} size={26} label={m.label} />
-              </motion.span>
-            ))}
-          </div>
-        </div>
-
-        <p className="relative text-[12.5px] text-white/70">
-          &copy; 2025 Zimoji · Made with mood.
-        </p>
-      </aside>
-
-      {/* ── Form side ── */}
-      <main className="flex flex-1 items-center justify-center px-6 py-10 sm:px-10">
+      <main className="relative z-10 w-full max-w-[420px] px-6 py-12">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
-          className="w-full max-w-md"
+          className="flex flex-col items-center w-full"
         >
-          <div className="mb-8 lg:hidden">
-            <Logo />
+          {/* Large Centered Logo */}
+          <div className="mb-6 flex flex-col items-center">
+            <Logo compact={false} href={null} />
           </div>
 
-          <h1 className="text-[27px] font-extrabold tracking-tight text-[var(--ink-900)]">
-            {title}
-          </h1>
-          <p className="mt-1.5 text-[14px] text-[var(--ink-400)]">{subtitle}</p>
+          <p className="mb-10 text-[14px] text-neutral-500 text-center font-medium">
+            {subtitle}
+          </p>
 
-          <div className="mt-7">{children}</div>
+          <div className="w-full">{children}</div>
 
-          <div className="mt-7 text-center text-[13.5px] text-[var(--ink-500)]">{footer}</div>
+          <div className="mt-8 text-center text-[13.5px] text-neutral-500 font-medium">
+            {footer}
+          </div>
         </motion.div>
       </main>
     </div>
   );
 }
 
-/** A labelled input with a leading icon, used across the auth forms. */
+/** A clean rounded input with a leading icon, matching new design. */
 export function AuthField({
   id,
-  label,
   type = "text",
   placeholder,
   icon,
   autoComplete,
   trailing,
+  helpText,
 }: {
   id: string;
-  label: string;
   type?: string;
   placeholder?: string;
   icon: ReactNode;
   autoComplete?: string;
   trailing?: ReactNode;
+  helpText?: ReactNode;
 }) {
   return (
-    <div>
-      <label htmlFor={id} className="mb-1.5 block text-[13px] font-semibold text-[var(--ink-700)]">
-        {label}
-      </label>
-      <div className="relative">
-        <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--ink-400)]">
+    <div className="relative mb-3.5">
+      <div className="relative flex items-center">
+        <span className="pointer-events-none absolute left-4 text-neutral-400">
           {icon}
         </span>
         <input
@@ -129,12 +81,17 @@ export function AuthField({
           type={type}
           placeholder={placeholder}
           autoComplete={autoComplete}
-          className="w-full rounded-sm border border-[var(--line)] bg-white py-3 pl-11 pr-11 text-[14.5px] text-[var(--ink-900)] outline-none transition-shadow placeholder:text-[var(--ink-400)] focus:border-[var(--brand-500)] focus:shadow-[0_0_0_3px_var(--brand-50)]"
+          className="w-full rounded-xl border border-neutral-200 bg-white py-3.5 pl-[44px] pr-12 text-[14px] text-neutral-900 outline-none transition-all placeholder:text-neutral-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 hover:border-neutral-300"
         />
         {trailing && (
-          <span className="absolute right-2.5 top-1/2 -translate-y-1/2">{trailing}</span>
+          <span className="absolute right-3 text-neutral-400">{trailing}</span>
         )}
       </div>
+      {helpText && (
+        <div className="mt-2 pl-3">
+          <span className="text-[11px] text-neutral-400">{helpText}</span>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowLeft, BadgeCheck, Search, UserPlus } from "lucide-react";
+import { LeftOutlined as ArrowLeft, CheckCircleOutlined as BadgeCheck, SearchOutlined as Search, UserAddOutlined as UserPlus } from "@ant-design/icons";
 import RightSidebar from "@/component/RightSidebar";
 import AnimatedEmoji from "@/component/AnimatedEmoji";
 import { getMood } from "@/lib/moods";
@@ -30,7 +30,7 @@ function PersonRow({ person }: { person: Person }) {
         <div className="flex items-center gap-1.5">
           <span className="text-[14px] font-semibold text-[var(--ink-900)] truncate">{person.name}</span>
           {person.isVerified && (
-            <BadgeCheck className="w-3.5 h-3.5 text-sky-500 shrink-0" fill="currentColor" stroke="white" />
+            <BadgeCheck className="text-[14px] text-sky-500 shrink-0" />
           )}
           <span
             className="hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10.5px] font-semibold shrink-0"
@@ -93,7 +93,7 @@ function FollowersContent() {
 
   return (
     <div className="flex h-screen">
-      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
+      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0  lg:pr-80">
         {/* Header */}
         <div className="sticky top-0 z-30 glass border-b border-[var(--line)]">
           <div className="max-w-2xl mx-auto px-4">
@@ -103,7 +103,7 @@ function FollowersContent() {
                 aria-label="Back"
                 className="flex items-center justify-center w-9 h-9 rounded-full hover:bg-black/[0.045] transition-colors"
               >
-                <ArrowLeft className="w-[18px] h-[18px] text-[var(--ink-700)]" />
+                <ArrowLeft className="text-[18px]] ] text-[var(--ink-700)]" />
               </Link>
               <div>
                 <h1 className="text-[17px] font-bold text-[var(--ink-900)]">{currentUser.name}</h1>
@@ -140,7 +140,7 @@ function FollowersContent() {
         <div className="max-w-2xl mx-auto px-4 py-5">
           {/* Search */}
           <div className="flex items-center gap-3 bg-white rounded-sm px-4 py-3 border border-[var(--line)] mb-4">
-            <Search className="shrink-0 w-4 h-4 text-[var(--ink-400)]" />
+            <Search className="shrink-0 text-[16px] text-[var(--ink-400)]" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -158,7 +158,7 @@ function FollowersContent() {
           ) : (
             <div className="flex flex-col items-center gap-2 py-20 text-center">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[var(--brand-50)]">
-                <UserPlus className="w-5 h-5 text-[var(--brand-600)]" />
+                <UserPlus className="text-[20px] text-[var(--brand-600)]" />
               </div>
               <p className="text-[14px] font-semibold text-[var(--ink-700)]">Nothing here yet</p>
               <p className="text-[12.5px] text-[var(--ink-400)]">

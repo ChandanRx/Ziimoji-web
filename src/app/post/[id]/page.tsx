@@ -122,11 +122,11 @@ export default function PostDiscussionPage() {
   if (!post) {
     return (
       <div className="flex h-screen">
-        <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
+        <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 lg:pr-80">
           <div className="max-w-2xl mx-auto px-4 py-6">
             <div className="text-center py-12">
               <p className="text-slate-400">Post not found</p>
-              <Link href="/" className="text-violet-600 hover:underline mt-4 inline-block">
+              <Link href="/" className="text-[var(--brand-600)] hover:underline mt-4 inline-block">
                 Go back home
               </Link>
             </div>
@@ -140,14 +140,14 @@ export default function PostDiscussionPage() {
   return (
     <div className="flex h-screen">
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
+      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 lg:pr-80">
         <div className="max-w-2xl mx-auto px-4 py-6">
           {/* Back Button */}
           <motion.button
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-slate-600 hover:text-violet-600 mb-4 transition-colors"
+            className="flex items-center gap-2 text-slate-600 hover:text-[var(--brand-600)] mb-4 transition-colors"
           >
             <FaArrowLeft />
             <span className="font-medium">Back</span>
@@ -197,7 +197,7 @@ export default function PostDiscussionPage() {
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Write a comment..."
                     className="w-full p-3 rounded-xl border border-slate-200 
-                             focus:border-violet-400 focus:outline-none
+                             focus:border-[var(--brand-500)] focus:outline-none
                              resize-none text-slate-900 placeholder-slate-400
                              transition-all duration-300"
                     rows={3}
@@ -211,7 +211,7 @@ export default function PostDiscussionPage() {
                       className={`px-4 py-2 rounded-lg font-semibold text-white
                                transition-all duration-300
                                ${newComment.trim()
-                                 ? "bg-violet-600 hover:bg-violet-700"
+                                 ? "btn-brand"
                                  : "bg-slate-200 cursor-not-allowed"
                                }`}
                     >
@@ -238,13 +238,13 @@ export default function PostDiscussionPage() {
                       alt={comment.username}
                       width={40}
                       height={40}
-                      className="rounded-full border-2 border-slate-200 object-cover hover:border-violet-300 transition-colors cursor-pointer"
+                      className="rounded-full border-2 border-slate-200 object-cover hover:border-[var(--brand-500)] transition-colors cursor-pointer"
                     />
                   </Link>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <Link href={`/profile/${comment.userId}`}>
-                        <span className="font-semibold text-slate-900 hover:text-violet-600 transition-colors cursor-pointer">
+                        <span className="font-semibold text-slate-900 hover:text-[var(--brand-600)] transition-colors cursor-pointer">
                           {comment.username}
                         </span>
                       </Link>
@@ -265,7 +265,7 @@ export default function PostDiscussionPage() {
                         <FaHeart className={comment.isLiked ? "fill-current" : ""} />
                         <span>{comment.likes}</span>
                       </motion.button>
-                      <button className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-violet-600 transition-colors">
+                      <button className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-[var(--brand-600)] transition-colors">
                         <FaReply />
                         <span>Reply</span>
                       </button>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Flame, TrendingUp, Hash } from "lucide-react";
+import { FireOutlined as Flame, RiseOutlined as TrendingUp, NumberOutlined as Hash } from "@ant-design/icons";
 import PostCard from "@/component/PostCard";
 import RightSidebar from "@/component/RightSidebar";
 import AnimatedEmoji from "@/component/AnimatedEmoji";
@@ -32,13 +32,13 @@ export default function TrendingPage() {
 
   return (
     <div className="flex h-screen">
-      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
+      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0  lg:pr-80">
         {/* Header */}
         <div className="sticky top-0 z-30 glass border-b border-[var(--line)]">
           <div className="max-w-2xl mx-auto px-4 pt-4">
             <div className="flex items-center gap-2">
               <div className="flex items-center justify-center w-8 h-8 rounded-[10px]" style={{ background: "var(--brand-grad)" }}>
-                <Flame className="w-[18px] h-[18px] text-white" />
+                <Flame className="text-[18px]] ] text-white" />
               </div>
               <h1 className="text-[22px] font-bold tracking-tight text-[var(--ink-900)]">Trending</h1>
             </div>
@@ -73,7 +73,7 @@ export default function TrendingPage() {
           {(filter === "Top" || filter === "Tags") && (
             <section>
               <div className="flex items-center gap-1.5 mb-3">
-                <Hash className="w-4 h-4 text-[var(--brand-600)]" />
+                <Hash className="text-[16px] text-[var(--brand-600)]" />
                 <h2 className="text-[14px] font-bold text-[var(--ink-900)]">Trending tags</h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -90,7 +90,7 @@ export default function TrendingPage() {
                           <span className="text-[14px] font-semibold text-[var(--ink-900)]">{h.tag}</span>
                           {h.hot && (
                             <span className="flex items-center gap-0.5 text-[9.5px] font-bold px-1.5 py-0.5 rounded-full bg-orange-50 text-orange-600">
-                              <Flame className="w-2.5 h-2.5" /> HOT
+                              <Flame className="text-[10px]" /> HOT
                             </span>
                           )}
                         </div>
@@ -108,7 +108,7 @@ export default function TrendingPage() {
           {(filter === "Top" || filter === "Moods") && (
             <section>
               <div className="flex items-center gap-1.5 mb-3">
-                <TrendingUp className="w-4 h-4 text-[var(--brand-600)]" />
+                <TrendingUp className="text-[16px] text-[var(--brand-600)]" />
                 <h2 className="text-[14px] font-bold text-[var(--ink-900)]">Mood pulse</h2>
               </div>
               <div className="p-4 rounded-sm bg-white border border-[var(--line)] space-y-3">
@@ -138,7 +138,7 @@ export default function TrendingPage() {
           {filter !== "Tags" && filter !== "Moods" && (
             <section>
               <div className="flex items-center gap-1.5 mb-3">
-                <Flame className="w-4 h-4 text-orange-500" />
+                <Flame className="text-[16px] text-orange-500" />
                 <h2 className="text-[14px] font-bold text-[var(--ink-900)]">
                   {filter === "Latest" ? "Fresh posts" : "Hot right now"}
                 </h2>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Heart, MessageCircle, UserPlus, AtSign, Repeat2, Bell, type LucideIcon } from "lucide-react";
+import { HeartOutlined as Heart, MessageOutlined as MessageCircle, UserAddOutlined as UserPlus, AliwangwangOutlined as AtSign, RetweetOutlined as Repeat2, BellOutlined as Bell } from "@ant-design/icons";
 import RightSidebar from "@/component/RightSidebar";
 import AnimatedEmoji from "@/component/AnimatedEmoji";
 import { getMood } from "@/lib/moods";
@@ -22,12 +22,12 @@ interface Notif {
   unread: boolean;
 }
 
-const meta: Record<NotifType, { Icon: LucideIcon; color: string; bg: string }> = {
-  like:    { Icon: Heart,         color: "#ec4899", bg: "#fce7f3" },
-  comment: { Icon: MessageCircle, color: "#7c5cff", bg: "#f2eeff" },
-  follow:  { Icon: UserPlus,      color: "#10b981", bg: "#d1fae5" },
-  mention: { Icon: AtSign,        color: "#0ea5e9", bg: "#e0f2fe" },
-  repost:  { Icon: Repeat2,       color: "#f59e0b", bg: "#fef3c7" },
+const meta: Record<NotifType, { Icon: any; color: string; bg: string }> = {
+  like:    { Icon: Heart,         color: "var(--notif-like-color)",    bg: "var(--notif-like-bg)"    },
+  comment: { Icon: MessageCircle, color: "var(--notif-comment-color)", bg: "var(--notif-comment-bg)" },
+  follow:  { Icon: UserPlus,      color: "var(--notif-follow-color)",  bg: "var(--notif-follow-bg)"  },
+  mention: { Icon: AtSign,        color: "var(--notif-mention-color)", bg: "var(--notif-mention-bg)" },
+  repost:  { Icon: Repeat2,       color: "var(--notif-repost-color)",  bg: "var(--notif-repost-bg)"  },
 };
 
 const notifs: Notif[] = [
@@ -58,14 +58,14 @@ export default function NotificationsPage() {
 
   return (
     <div className="flex h-screen">
-      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
+      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0  lg:pr-80">
         {/* Header */}
         <div className="sticky top-0 z-30 glass border-b border-[var(--line)]">
           <div className="max-w-2xl mx-auto px-4 pt-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="flex items-center justify-center w-8 h-8 rounded-[10px]" style={{ background: "var(--brand-grad)" }}>
-                  <Bell className="w-[17px] h-[17px] text-white" />
+                  <Bell className="text-[17px] text-white" />
                 </div>
                 <h1 className="text-[22px] font-bold tracking-tight text-[var(--ink-900)]">Notifications</h1>
               </div>
@@ -131,7 +131,7 @@ export default function NotificationsPage() {
                           className="absolute -bottom-1 -right-1 flex items-center justify-center w-6 h-6 rounded-full ring-2 ring-white"
                           style={{ background: bg }}
                         >
-                          <Icon className="w-3.5 h-3.5" style={{ color }} fill={n.type === "like" ? color : "none"} />
+                          <Icon className="w-3.5 h-3.5" style={{ color }} />
                         </span>
                       </div>
 
@@ -162,7 +162,7 @@ export default function NotificationsPage() {
           ) : (
             <div className="flex flex-col items-center gap-2 py-24 text-center">
               <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--brand-50)]">
-                <Bell className="w-6 h-6 text-[var(--brand-600)]" />
+                <Bell className="text-[24px] text-[var(--brand-600)]" />
               </div>
               <p className="text-[15px] font-semibold text-[var(--ink-700)]">You&apos;re all caught up</p>
               <p className="text-[13px] text-[var(--ink-400)]">No {filter.toLowerCase()} notifications right now.</p>

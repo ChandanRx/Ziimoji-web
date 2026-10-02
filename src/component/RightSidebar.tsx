@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { TrendingUp, BadgeCheck } from "lucide-react";
+import { RiseOutlined as TrendingUp, CheckCircleOutlined as BadgeCheck } from "@ant-design/icons";
 import { moods } from "@/lib/moods";
 import AnimatedEmoji from "@/component/AnimatedEmoji";
 
@@ -112,7 +112,7 @@ const RightSidebar = ({ currentUser }: RightSidebarProps) => {
                         {s.username}
                       </span>
                       {s.isVerified && (
-                        <BadgeCheck className="w-3.5 h-3.5 text-sky-500 shrink-0" fill="currentColor" stroke="white" />
+                        <BadgeCheck className="text-[14px] text-sky-500 shrink-0" />
                       )}
                     </div>
                     <div className="text-[11.5px] text-[var(--ink-400)] truncate">{s.name}</div>
@@ -129,7 +129,7 @@ const RightSidebar = ({ currentUser }: RightSidebarProps) => {
         {/* Trending */}
         <section className="p-4 rounded-sm border border-[var(--line)]">
           <div className="flex items-center gap-1.5 mb-3">
-            <TrendingUp className="w-3.5 h-3.5 text-orange-500" />
+            <TrendingUp className="text-[14px] text-orange-500" />
             <h3 className="text-[13px] font-semibold text-[var(--ink-700)]">Trending moods</h3>
           </div>
 

@@ -4,10 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "motion/react";
-import {
-  ArrowLeft, BadgeCheck, CalendarDays, LinkIcon, MapPin,
-  MessageCircle, Settings, Grid3x3, Heart, Image as ImageIcon,
-} from "lucide-react";
+import { LeftOutlined as ArrowLeft, CheckCircleOutlined as BadgeCheck, CalendarOutlined as CalendarDays, LinkOutlined as LinkIcon, EnvironmentOutlined as MapPin, MessageOutlined as MessageCircle, SettingOutlined as Settings, AppstoreOutlined as Grid3x3, HeartOutlined as Heart, PictureOutlined as ImageIcon } from "@ant-design/icons";
 import PostCard from "@/component/PostCard";
 import RightSidebar from "@/component/RightSidebar";
 import AnimatedEmoji from "@/component/AnimatedEmoji";
@@ -44,7 +41,7 @@ export default function ProfilePage() {
 
   return (
     <div className="flex h-screen">
-      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
+      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 lg:pr-80">
         {/* Sticky header */}
         <div className="sticky top-0 z-30 glass border-b border-[var(--line)]">
           <div className="max-w-2xl mx-auto flex items-center gap-4 px-4 py-3">
@@ -53,7 +50,7 @@ export default function ProfilePage() {
               aria-label="Back"
               className="flex items-center justify-center w-9 h-9 rounded-full hover:bg-black/[0.045] transition-colors"
             >
-              <ArrowLeft className="w-[18px] h-[18px] text-[var(--ink-700)]" />
+              <ArrowLeft className="text-[18px]] ] text-[var(--ink-700)]" />
             </Link>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
@@ -61,7 +58,7 @@ export default function ProfilePage() {
                   {person.name}
                 </h1>
                 {person.isVerified && (
-                  <BadgeCheck className="w-4 h-4 text-sky-500 shrink-0" fill="currentColor" stroke="white" />
+                  <BadgeCheck className="text-[16px] text-sky-500 shrink-0" />
                 )}
               </div>
               <p className="text-[12px] text-[var(--ink-400)]">{formatCount(person.posts)} posts</p>
@@ -99,7 +96,7 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2 mb-2">
                 {isSelf ? (
                   <button className="flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-semibold border border-[var(--line)] text-[var(--ink-700)] hover:bg-[var(--canvas)] transition-colors">
-                    <Settings className="w-4 h-4" /> Edit profile
+                    <Settings className="text-[16px]" /> Edit profile
                   </button>
                 ) : (
                   <>
@@ -108,7 +105,7 @@ export default function ProfilePage() {
                       aria-label="Message"
                       className="flex items-center justify-center w-10 h-10 rounded-full border border-[var(--line)] text-[var(--ink-700)] hover:bg-[var(--canvas)] transition-colors"
                     >
-                      <MessageCircle className="w-[18px] h-[18px]" />
+                      <MessageCircle className="text-[18px]] ]" />
                     </Link>
                     <button
                       onClick={() => setFollowing((f) => !f)}
@@ -130,7 +127,7 @@ export default function ProfilePage() {
               <div className="flex items-center gap-1.5">
                 <h2 className="text-[20px] font-bold text-[var(--ink-900)]">{person.name}</h2>
                 {person.isVerified && (
-                  <BadgeCheck className="w-[18px] h-[18px] text-sky-500" fill="currentColor" stroke="white" />
+                  <BadgeCheck className="text-[18px]] ] text-sky-500" />
                 )}
                 <span
                   className="ml-1 flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold"
@@ -152,11 +149,11 @@ export default function ProfilePage() {
 
             {/* Meta */}
             <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] text-[var(--ink-400)]">
-              <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Bengaluru, India</span>
+              <span className="flex items-center gap-1.5"><MapPin className="text-[14px]" /> Bengaluru, India</span>
               <a href="#" className="flex items-center gap-1.5 text-[var(--brand-600)] hover:underline">
-                <LinkIcon className="w-3.5 h-3.5" /> zymoji.app
+                <LinkIcon className="text-[14px]" /> zymoji.app
               </a>
-              <span className="flex items-center gap-1.5"><CalendarDays className="w-3.5 h-3.5" /> Joined Mar 2024</span>
+              <span className="flex items-center gap-1.5"><CalendarDays className="text-[14px]" /> Joined Mar 2024</span>
             </div>
 
             {/* Stats */}
@@ -186,7 +183,7 @@ export default function ProfilePage() {
                     className="relative flex-1 flex items-center justify-center gap-2 py-3 text-[13.5px] font-semibold transition-colors"
                     style={{ color: active ? "var(--brand-600)" : "var(--ink-400)" }}
                   >
-                    <Icon className="w-4 h-4" strokeWidth={active ? 2.4 : 2} />
+                    <Icon className="w-4 h-4" />
                     {label}
                     {active && (
                       <motion.span
@@ -207,7 +204,7 @@ export default function ProfilePage() {
             {activeTab === "likes" ? (
               <div className="flex flex-col items-center gap-2 py-16 text-center">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full" style={{ background: mood.chip }}>
-                  <Heart className="w-5 h-5" style={{ color: mood.accent }} />
+                  <Heart className="text-[20px]" style={{ color: mood.accent }} />
                 </div>
                 <p className="text-[14px] font-semibold text-[var(--ink-700)]">Likes are private</p>
                 <p className="text-[12.5px] text-[var(--ink-400)]">Only {isSelf ? "you" : person.name} can see this.</p>

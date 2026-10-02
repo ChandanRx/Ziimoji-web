@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, X, TrendingUp, ArrowUpRight } from "lucide-react";
+import { SearchOutlined as Search, CloseOutlined as X, RiseOutlined as TrendingUp, ArrowUpOutlined as ArrowUpRight } from "@ant-design/icons";
 import RightSidebar from "@/component/RightSidebar";
 import { moods } from "@/lib/moods";
 import AnimatedEmoji from "@/component/AnimatedEmoji";
@@ -52,7 +52,7 @@ const SearchContent = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0 md:ml-[264px] lg:pr-80">
+      <div className="flex-1 overflow-y-auto pt-14 pb-16 md:pt-0 md:pb-0  lg:pr-80">
         <div className="max-w-2xl mx-auto px-6 py-8">
           {/* Header */}
           <div className="mb-6">
@@ -64,7 +64,7 @@ const SearchContent = () => {
 
           {/* Search bar */}
           <div className="sticky top-2 z-20 mb-8 flex items-center gap-3 bg-white rounded-sm px-4 py-3 border border-[var(--line)] shadow-[var(--shadow-sm)] focus-within:shadow-[var(--shadow-md)] transition-shadow">
-            <Search className="shrink-0 w-4 h-4 text-slate-400" />
+            <Search className="shrink-0 text-[16px] text-slate-400" />
             <input
               type="text"
               placeholder="Search moods, emojis, keywords…"
@@ -78,15 +78,15 @@ const SearchContent = () => {
                 onClick={handleClear}
                 className="shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors"
               >
-                <X className="w-3 h-3 text-slate-500" />
+                <X className="text-[12px] text-slate-500" />
               </button>
             )}
           </div>
 
           {searchQuery ? (
             <div className="flex flex-col items-center py-20 gap-4">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-violet-50">
-                <Search className="w-6 h-6 text-violet-500" />
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-[var(--brand-50)]">
+                <Search className="text-[24px] text-[var(--brand-500)]" />
               </div>
               <div className="text-center">
                 <p className="text-sm font-semibold text-slate-600">
@@ -122,7 +122,7 @@ const SearchContent = () => {
                         </p>
                       </div>
                       <ArrowUpRight
-                        className="shrink-0 w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="shrink-0 text-[16px] opacity-0 group-hover:opacity-100 transition-opacity"
                         style={{ color: mood.accent }}
                       />
                     </button>
@@ -153,7 +153,7 @@ const SearchContent = () => {
                       <div className="flex items-center gap-2 shrink-0">
                         {topic.trending && (
                           <span className="flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-orange-50 text-orange-600">
-                            <TrendingUp className="w-2.5 h-2.5" /> HOT
+                            <TrendingUp className="text-[10px]" /> HOT
                           </span>
                         )}
                         <span className="text-xs font-semibold text-emerald-600">{topic.change}</span>

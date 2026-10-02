@@ -3,23 +3,13 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import {
-  Search, X, Smile, Frown, Angry, Sparkles, Moon,
-  TrendingUp, Clock,
-} from "lucide-react";
+import { SearchOutlined as Search, CloseOutlined as X, RiseOutlined as TrendingUp, ClockCircleOutlined as Clock } from "@ant-design/icons";
+import { moods } from "@/lib/moods";
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-const moodSuggestions = [
-  { label: "Happy",   Icon: Smile,    accent: "#d97706", bg: "#fef9c3" },
-  { label: "Sad",     Icon: Frown,    accent: "#4f46e5", bg: "#e0e7ff" },
-  { label: "Excited", Icon: Sparkles, accent: "#ea580c", bg: "#fed7aa" },
-  { label: "Angry",   Icon: Angry,    accent: "#dc2626", bg: "#fee2e2" },
-  { label: "Bored",   Icon: Moon,     accent: "#475569", bg: "#e2e8f0" },
-];
 
 const trendingTags = ["#MorningVibes", "#LateNight", "#GoodDay", "#Overthinking", "#Grateful"];
 
@@ -74,7 +64,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
               {/* Search input */}
               <div className="p-5 pb-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <Search className="w-4 h-4 text-slate-400" />
+                  <Search className="text-[16px] text-slate-400" />
                   <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
                     Search Zimoji
                   </span>
@@ -83,12 +73,12 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                     onClick={onClose}
                     className="flex items-center justify-center w-7 h-7 rounded-lg text-slate-400 hover:bg-slate-100 transition-colors"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="text-[14px]" />
                   </button>
                 </div>
 
                 <div className="relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px] text-slate-400" />
                   <input
                     ref={inputRef}
                     type="text"
@@ -96,14 +86,14 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSearch(searchQuery)}
-                    className="w-full pl-11 pr-11 py-3 rounded-xl text-[14px] font-medium outline-none bg-slate-50 border border-slate-200 focus:border-violet-300 focus:ring-2 focus:ring-violet-100 text-slate-800 placeholder-slate-400 transition-shadow"
+                    className="w-full pl-11 pr-11 py-3 rounded-xl text-[14px] font-medium outline-none bg-slate-50 border border-slate-200 focus:border-[var(--brand-500)] focus:ring-2 focus:ring-[var(--brand-50)] text-slate-800 placeholder-slate-400 transition-shadow"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery("")}
                       className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-lg text-slate-400 hover:bg-slate-200 transition-colors"
                     >
-                      <X className="w-3 h-3" />
+                      <X className="text-[12px]" />
                     </button>
                   )}
                 </div>
@@ -114,14 +104,14 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
               {/* Mood suggestions */}
               <div className="px-5 pt-4 pb-3">
                 <div className="flex items-center gap-2 mb-3">
-                  <TrendingUp className="w-3.5 h-3.5 text-orange-400" />
+                  <TrendingUp className="text-[14px] text-orange-400" />
                   <span className="text-[10.5px] font-semibold uppercase tracking-wide text-slate-400">
                     Browse by Mood
                   </span>
                 </div>
 
                 <div className="grid grid-cols-4 gap-2">
-                  {moodSuggestions.map((mood) => (
+                  {moods.map((mood) => (
                     <button
                       key={mood.label}
                       onClick={() => handleSearch(mood.label)}
@@ -129,7 +119,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                     >
                       <div
                         className="flex items-center justify-center w-9 h-9 rounded-lg"
-                        style={{ background: mood.bg }}
+                        style={{ background: mood.chip }}
                       >
                         <mood.Icon className="w-4 h-4" style={{ color: mood.accent }} />
                       </div>
@@ -144,7 +134,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
               {/* Trending */}
               <div className="px-5 pt-3.5 pb-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                  <Clock className="text-[14px] text-emerald-500" />
                   <span className="text-[10.5px] font-semibold uppercase tracking-wide text-slate-400">
                     Trending
                   </span>

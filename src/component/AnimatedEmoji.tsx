@@ -49,7 +49,13 @@ const AnimatedEmoji = ({
 
   const handleRef = useCallback((dot: DotLottie | null) => {
     if (!dot) return;
-    dot.addEventListener("loadError", () => setFailed(true));
+    dot.addEventListener("loadError", (e: unknown) => {
+      const err = (e as { error?: Error })?.error;
+      if (err?.name === "AbortError" || err?.message?.includes("aborted")) {
+        return;
+      }
+      setFailed(true);
+    });
   }, []);
 
   const a11y = {
